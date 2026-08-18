@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { IconCard } from './IconCard'
+import iconCiCd from '../../assets/glass-icons/Product Modules/CI CD.svg'
+import iconComposable from '../../assets/glass-icons/General/Composable.svg'
 
 const meta = {
   title: 'Components/Icon Card',
@@ -19,7 +21,7 @@ const meta = {
     icon: { control: false },
   },
   args: {
-    icon: <SparkIcon />,
+    icon: <GlassIcon src={iconCiCd} label="CI/CD" />,
     title: 'Ship faster',
     description: 'Reuse audited components instead of rebuilding the same patterns on every project.',
     orientation: 'vertical',
@@ -43,21 +45,15 @@ export const TitleOnly: Story = {
 export const Grid: Story = {
   render: (args) => (
     <div className="grid grid-cols-2 gap-5">
-      <IconCard {...args} size="mobile" title="Ship faster" />
-      <IconCard {...args} size="mobile" title="Stay consistent" />
+      <IconCard {...args} size="mobile" title="Ship faster" icon={<GlassIcon src={iconCiCd} label="CI/CD" />} />
+      <IconCard {...args} size="mobile" title="Stay consistent" icon={<GlassIcon src={iconComposable} label="Composable" />} />
     </div>
   ),
 }
 
-function SparkIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" className="text-brand-primaryActive">
-      <path
-        d="M16 3l3.2 9.8L29 16l-9.8 3.2L16 29l-3.2-9.8L3 16l9.8-3.2L16 3z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
+/** Renders one of the library's exported "glass icon" assets (`src/assets/glass-icons/`) — the
+ * illustrative icon set from Figma's `card-icon variable` component. Cards should always use one
+ * of these rather than a hand-drawn placeholder. */
+function GlassIcon({ src, label }: { src: string; label: string }) {
+  return <img src={src} alt="" role="presentation" aria-label={label} className="size-full" />
 }

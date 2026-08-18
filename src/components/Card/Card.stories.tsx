@@ -3,6 +3,11 @@ import { Card } from './Card'
 import { Label } from '../Label/Label'
 import { Tag } from '../Tag/Tag'
 import { Button } from '../Button/Button'
+import iconDam from '../../assets/glass-icons/Data/DAM.svg'
+import iconAnalytics from '../../assets/glass-icons/Performance/Analytics.svg'
+import iconTestimonies from '../../assets/glass-icons/Customer Support/Testimonies.svg'
+import iconDocumentation from '../../assets/glass-icons/Education/Documentation.svg'
+import iconVerification from '../../assets/glass-icons/Security/Verification.svg'
 
 const meta = {
   title: 'Components/Card',
@@ -31,7 +36,7 @@ const meta = {
     padding: true,
     title: 'Card Title',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    icon: <PlaceholderIcon />,
+    icon: <GlassIcon src={iconDam} label="Data" />,
   },
   decorators: [
     (Story) => (
@@ -116,7 +121,7 @@ export const SpecialStatHighlight: Story = {
   },
   render: () => (
     <Card
-      icon={<PlaceholderIcon />}
+      icon={<GlassIcon src={iconAnalytics} label="Analytics" />}
       title="Customer growth"
       description="Year over year, across all regions."
       mainContent1={<p className="text-[40px] font-bold text-brand-primaryActive">+128%</p>}
@@ -154,7 +159,7 @@ export const SpecialCsQuote: Story = {
   },
   render: () => (
     <Card
-      icon={<PlaceholderIcon />}
+      icon={<GlassIcon src={iconTestimonies} label="Testimonies" />}
       title="Enterprise Websites"
       bottomContent={
         <blockquote className="w-full border-l-2 border-brand-primary pl-4 text-surfaces-textSecondary">
@@ -175,7 +180,7 @@ export const SpecialQuickLink: Story = {
   render: () => (
     <Card
       padding
-      icon={<PlaceholderIcon />}
+      icon={<GlassIcon src={iconDocumentation} label="Documentation" />}
       title="Developer documentation"
       topContent={<Tag size="small">Docs</Tag>}
       bottomContent={
@@ -198,7 +203,7 @@ export const SpecialIconLeft: Story = {
   },
   render: () => (
     <Card
-      icon={<PlaceholderIcon />}
+      icon={<GlassIcon src={iconVerification} label="Verification" />}
       title="Single sign-on"
       description="Connect your identity provider once and every solution inherits it."
     />
@@ -214,17 +219,11 @@ function Stat({ value, label }: { value: string; label: string }) {
   )
 }
 
-function PlaceholderIcon() {
-  return (
-    <div className="flex size-full items-center justify-center rounded-md bg-gradient-to-br from-brand-primaryHover to-brand-accent text-neutral-0">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M12 3l2.4 7.35H22l-6.2 4.5 2.4 7.15L12 17.5l-6.2 4.5 2.4-7.15L2 10.35h7.6L12 3z"
-          fill="currentColor"
-        />
-      </svg>
-    </div>
-  )
+/** Renders one of the library's exported "glass icon" assets (`src/assets/glass-icons/`) — the
+ * illustrative icon set from Figma's `card-icon variable` component. Cards should always use one
+ * of these rather than a hand-drawn placeholder. */
+function GlassIcon({ src, label }: { src: string; label: string }) {
+  return <img src={src} alt="" role="presentation" aria-label={label} className="size-full" />
 }
 
 function PlaceholderImage() {

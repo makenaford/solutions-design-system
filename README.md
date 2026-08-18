@@ -47,6 +47,7 @@ function Example() {
 
 - `src/tokens/` — colors, typography, spacing, and shadow tokens extracted from the Figma library's variables and styles. Wired into `tailwind.config.ts` as theme extensions.
 - `src/components/` — one folder per component, each exporting a named component + a `<Name>Props` TypeScript type, plus any real exported icon/image assets used by that component.
+- `src/assets/glass-icons/` — the exported "glass icon" illustration set (Figma's `card-icon variable` component), organized by category. Any illustrative icon inside a card (`Card`, `IconCard`, and their Storybook examples) should use one of these rather than a hand-drawn placeholder — import the specific `.svg` and render it with `<img src={icon} className="size-full" />`, matching the existing usage in `Card.stories.tsx`/`IconCard.stories.tsx`.
 
 ## Components
 
