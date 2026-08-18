@@ -9,6 +9,9 @@ export type { BadgeProps } from './components/Badge/Badge'
 export { Button } from './components/Button/Button'
 export type { ButtonColor, ButtonVariant, ButtonSize, ButtonProps } from './components/Button/Button'
 
+export { Card } from './components/Card/Card'
+export type { CardAlign, CardProps } from './components/Card/Card'
+
 export { Checkbox } from './components/Checkbox/Checkbox'
 export type { CheckboxSize, CheckboxProps } from './components/Checkbox/Checkbox'
 

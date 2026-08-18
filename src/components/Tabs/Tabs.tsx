@@ -2,6 +2,7 @@ import { useId, useLayoutEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import clsx from 'clsx'
 import { action as actionText } from '../../tokens/typography'
+import { components } from '../../tokens/colors'
 
 export type TabsSize = 'desktop' | 'mobile'
 
@@ -79,13 +80,21 @@ export function Tabs({ tabs, activeTab, defaultActiveTab, onTabChange, size = 'd
         {indicator && (
           <span
             aria-hidden="true"
-            className="absolute rounded-full bg-brand-primary shadow-focusShadowTab transition-[transform,width,height] duration-300 ease-out"
+            className="absolute left-0 top-0 rounded-full p-px transition-[transform,width,height] duration-300 ease-out"
             style={{
               width: indicator.width,
               height: indicator.height,
               transform: `translate(${indicator.left}px, ${indicator.top}px)`,
+              backgroundImage: `linear-gradient(135deg, ${components.glassTab.strokeGradient01}, ${components.glassTab.strokeGradient02})`,
             }}
-          />
+          >
+            <span
+              className="block size-full rounded-full shadow-focusShadowTab backdrop-blur-[40px]"
+              style={{
+                backgroundImage: `linear-gradient(135deg, ${components.glassTab.bgGradient01}, ${components.glassTab.bgGradient02})`,
+              }}
+            />
+          </span>
         )}
         {tabs.map((tab) => {
           const isActive = tab.id === activeId

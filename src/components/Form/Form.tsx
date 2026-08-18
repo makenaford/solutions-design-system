@@ -154,7 +154,7 @@ export const Form = ({
     <form
       onSubmit={onSubmit}
       className={clsx(
-        'relative flex w-full flex-col items-center gap-10 overflow-hidden rounded-lg border border-components-glassLine-1 p-10 shadow-glassCard backdrop-blur-[50px]',
+        'relative flex w-full flex-col items-center gap-10 overflow-hidden rounded-lg border border-components-glassLine-1 p-10 shadow-glassCard backdrop-blur-[100px]',
         className,
       )}
       style={{

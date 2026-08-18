@@ -49,7 +49,7 @@ export const IconCard = ({
   return (
     <div
       className={clsx(
-        'group flex flex-col items-start gap-5 rounded-lg border border-components-glassLine-1 bg-surfaces-cardBgBlue p-[20px] shadow-glassCard backdrop-blur-[50px]',
+        'group flex flex-col items-start gap-5 rounded-lg border border-components-glassLine-1 bg-surfaces-cardBgBlue p-[20px] shadow-glassCard backdrop-blur-[100px]',
         'transition-[transform,box-shadow,border-color] duration-200 ease-out',
         'hover:-translate-y-1 hover:border-brand-lighten3/60 hover:shadow-hoverLift',
         size === 'desktop' ? 'w-full max-w-[600px]' : 'w-full',

@@ -34,7 +34,14 @@ function Example() {
 
 ## Components
 
-Accordion, Badge, Button, Checkbox, Form, IconCard, Input, Label, Pagination, Radio, Search, TableOfContents, Tabs, Tag.
+Accordion, Badge, Button, Card, Checkbox, Form, IconCard, Input, Label, Pagination, Radio, Search, TableOfContents, Tabs, Tag.
+
+`Card` maps to the Figma **card-main** component (node `16728:26513`) and models its `align`
+(vertical/horizontal) and `padding` (true/false) variants as props, with slots for image, icon,
+title/description, top/main/bottom content. The "Special Cards" shown alongside card-main in
+Figma (Resource, Stat Highlight, CS-Stat, CS-Quote, Quick Link, Icon-Left, ...) aren't separate
+components — they're this same `Card` composed with different slot content. See the Storybook
+stories for examples of each.
 
 ## Verified
 
