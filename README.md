@@ -4,9 +4,25 @@ React + TypeScript + Tailwind component library generated from the Figma **"Solu
 
 ## Install
 
+Requires [pnpm](https://pnpm.io) (this repo does not use npm/yarn). Version and Node requirement
+are pinned in `package.json`'s `packageManager`/`engines` fields.
+
 ```bash
-npm install
+pnpm install
 ```
+
+### Workspace security policies
+
+`pnpm-workspace.yaml` sets a few supply-chain hardening options for this repo — see the comments
+in that file for details:
+
+- `engineStrict: true` — fail instead of warn if the running Node version doesn't satisfy `engines`.
+- `minimumReleaseAge: 10080` — don't install any dependency (direct or transitive) until it's been
+  published for at least a week.
+- `blockExoticSubdeps: true` — only direct dependencies may resolve from a git/tarball URL.
+- `trustPolicy: no-downgrade` with `trustPolicyIgnoreAfter: 131040` — refuse a publisher
+  trust-level downgrade for a version already in the lockfile, unless that version has been out
+  for more than a quarter year.
 
 ## Use
 
@@ -45,7 +61,7 @@ stories for examples of each.
 
 ## Verified
 
-`npm install && npm run build` (tsc + vite) passes clean. The component set was also visually smoke-tested in a live browser preview (see `preview/main.tsx`), which caught and fixed four real bugs before this was usable:
+`pnpm install && pnpm run build` (tsc + vite) passes clean. The component set was also visually smoke-tested in a live browser preview (see `preview/main.tsx`), which caught and fixed four real bugs before this was usable:
 
 - **Checkbox** — the checkmark glyph was rotated the wrong direction and rendered as a `>` arrow instead of a tick.
 - **Accordion** — the expand/collapse chevron used an invalid Tailwind class (`-rotate-135`, not a real utility — Tailwind only ships 45/90/180 by default) so it never rotated, and the expanded-state icon transform pointed the wrong way; the panel content also had no text color set, making it invisible on the dark background.
