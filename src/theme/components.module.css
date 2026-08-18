@@ -1,0 +1,305 @@
+/*
+ * Shared component treatments for the Solutions Design System.
+ *
+ * Every rule here is attached to a Mantine component through `theme.components` (see
+ * `./components.ts`), so a treatment is written once and reached with a `variant` prop —
+ * `<Paper variant="glass">`, `<Button variant="outline">` — instead of being repeated at call
+ * sites. Colours come from the `--sds-*` / `--mantine-*` variables, which flip with the colour
+ * scheme, so none of these rules need a light/dark branch of their own.
+ */
+
+/* ---------------------------------------------------------------- glass surface ---------- */
+
+/*
+ * Figma "glass effect card": Glass Step 01 -> Step 02 gradient fill, Glass Line 01 border,
+ * 100px background blur, and the Glass Card drop shadow. Used by Card, IconCard, Form and the
+ * Tabs bar — hence living here rather than in any one of them.
+ */
+.glassSurface[data-variant='glass'] {
+  background-color: var(--sds-card-bg-blue);
+  background-image: linear-gradient(60deg, var(--sds-glass-step-01) 43%, var(--sds-glass-step-02) 135%);
+  border: 1px solid var(--sds-glass-line-01);
+  box-shadow: var(--mantine-shadow-lg);
+  backdrop-filter: blur(var(--sds-glass-blur));
+}
+
+/* Marketing hover-lift, opt-in via `data-interactive` so static cards stay still. */
+.glassSurface[data-interactive] {
+  transition:
+    transform var(--sds-motion-base) var(--sds-motion-ease),
+    box-shadow var(--sds-motion-base) var(--sds-motion-ease),
+    border-color var(--sds-motion-base) var(--sds-motion-ease);
+}
+
+.glassSurface[data-interactive]:hover {
+  transform: translateY(-4px);
+  border-color: var(--mantine-color-brand-2);
+  box-shadow: var(--mantine-shadow-xl);
+}
+
+/* ---------------------------------------------------------------- button ----------------- */
+
+.button {
+  transition:
+    background-image var(--sds-motion-base) var(--sds-motion-ease),
+    border-color var(--sds-motion-base) var(--sds-motion-ease),
+    box-shadow var(--sds-motion-base) var(--sds-motion-ease),
+    transform var(--sds-motion-base) var(--sds-motion-ease);
+}
+
+/*
+ * Figma "Solid": a ~225deg gradient between Primary/Hover and Primary/Default. Mantine's `filled`
+ * variant is the closest built-in, so the gradient is applied there rather than adding a variant.
+ */
+.button[data-variant='filled'] {
+  background-image: linear-gradient(
+    224.78deg,
+    var(--mantine-color-brand-5) 37.232%,
+    var(--mantine-color-brand-6) 63.409%
+  );
+  border: 1px solid transparent;
+}
+
+.button[data-variant='filled']:hover {
+  border-color: var(--mantine-color-brand-6);
+}
+
+/* Figma "Outline": glass fill + Button Outline line/text tokens. */
+.button[data-variant='outline'] {
+  color: var(--sds-button-outline-text);
+  background-image: linear-gradient(
+    180deg,
+    var(--sds-button-outline-bg-01),
+    var(--sds-button-outline-bg-02)
+  );
+  border: 1px solid var(--sds-button-outline-line-01);
+  box-shadow: var(--mantine-shadow-lg);
+  backdrop-filter: blur(var(--sds-glass-blur));
+}
+
+.button[data-variant='outline']:hover {
+  border-color: var(--sds-button-outline-line-02);
+  background-image: linear-gradient(
+    180deg,
+    var(--sds-button-outline-bg-01),
+    var(--sds-button-outline-bg-01)
+  );
+}
+
+.button:not(:disabled):not([data-disabled]):hover {
+  transform: translateY(-1px);
+  box-shadow: var(--mantine-shadow-xl);
+}
+
+.button:not(:disabled):not([data-disabled]):active {
+  transform: translateY(0) scale(0.98);
+  /* Figma "buttonPressedInner" */
+  box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/*
+ * Icon nudge on hover. Mantine renders `leftSection` / `rightSection` into the same `section`
+ * element, so position is inferred from document order: a left icon is always the first child and
+ * a right icon always the last, whether or not its counterpart is present.
+ */
+.buttonSection {
+  transition: transform var(--sds-motion-base) var(--sds-motion-ease);
+}
+
+.button:hover .buttonSection:first-child {
+  transform: translateX(-2px);
+}
+
+.button:hover .buttonSection:last-child {
+  transform: translateX(2px);
+}
+
+/* ---------------------------------------------------------------- tabs ------------------- */
+
+/*
+ * Figma Tabs bar: the glass pill container that holds the tab list. Its fill is
+ * `Components/Glass Tab/tab fill 1` — near-white (#f8faff) in light mode, a barely-there grey wash
+ * in dark. The `bg-gradient-*` tokens belong to the selected pill below, not to this container:
+ * in light mode they resolve to solid brand blues, which would otherwise paint the whole bar.
+ */
+.tabsList {
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-sm);
+  border: 1px solid var(--sds-glass-line-01);
+  border-radius: var(--mantine-radius-round);
+  background-color: var(--sds-tab-fill);
+  backdrop-filter: blur(var(--sds-tab-blur));
+}
+
+.tab {
+  border-radius: var(--mantine-radius-round);
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+  font-weight: var(--mantine-font-weight-medium);
+  color: var(--sds-text-secondary);
+  transition:
+    color var(--sds-motion-fast) var(--sds-motion-ease),
+    background-color var(--sds-motion-fast) var(--sds-motion-ease),
+    background-image var(--sds-motion-fast) var(--sds-motion-ease);
+}
+
+.tab:hover {
+  color: var(--mantine-color-brand-2);
+  background-color: var(--sds-overlay-hover);
+}
+
+/*
+ * Figma "UI Components/Tabs/Selected": the `bg-gradient-*` fill plus the `stroke-gradient-*`
+ * border, and the `focus shadow tab` glow. The two modes read very differently and both are
+ * driven purely by the tokens — light mode is a solid brand-blue pill with a fully transparent
+ * stroke, dark mode a translucent glass pill with a blue-to-purple stroke.
+ *
+ * The stroke is layered via background-origin/clip because a gradient cannot be applied to
+ * `border-color` directly.
+ */
+.tab[data-active] {
+  color: var(--mantine-color-white);
+  font-weight: var(--mantine-font-weight-bold);
+  border: 1px solid transparent;
+  background-image:
+    linear-gradient(135deg, var(--sds-tab-gradient-01), var(--sds-tab-gradient-02)),
+    linear-gradient(135deg, var(--sds-tab-stroke-01), var(--sds-tab-stroke-02));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: -1px 1px 7px 2px var(--sds-tab-focus-shadow);
+}
+
+.tab[data-active]:hover {
+  color: var(--mantine-color-white);
+}
+
+/* ---------------------------------------------------------------- accordion -------------- */
+
+.accordionControl {
+  border-radius: var(--mantine-radius-lg);
+  padding-inline: var(--mantine-spacing-sm);
+  transition: background-color var(--sds-motion-fast) var(--sds-motion-ease);
+}
+
+.accordionControl:hover {
+  background-color: var(--sds-overlay-hover);
+}
+
+.accordionLabel {
+  font-size: var(--mantine-font-size-xl);
+  font-weight: var(--mantine-font-weight-medium);
+  color: var(--sds-text-primary);
+}
+
+.accordionItem {
+  border-bottom: 1px solid var(--mantine-color-neutral-1);
+}
+
+.accordionChevron {
+  color: var(--sds-text-secondary);
+  transition:
+    transform var(--sds-motion-base) var(--sds-motion-ease),
+    color var(--sds-motion-base) var(--sds-motion-ease);
+}
+
+.accordionControl[aria-expanded='true'] .accordionChevron {
+  color: var(--mantine-color-brand-4);
+}
+
+.accordionPanelContent {
+  color: var(--sds-text-secondary);
+  padding-inline: var(--mantine-spacing-sm);
+  padding-block-end: var(--mantine-spacing-md);
+}
+
+/* ---------------------------------------------------------------- inputs ----------------- */
+
+.inputElement {
+  transition:
+    border-color var(--sds-motion-fast) var(--sds-motion-ease),
+    box-shadow var(--sds-motion-fast) var(--sds-motion-ease);
+}
+
+.inputElement:hover:not(:disabled):not([data-disabled]) {
+  border-color: var(--mantine-color-neutral-5);
+}
+
+.inputElement:focus,
+.inputElement:focus-within {
+  border-color: var(--mantine-color-brand-4);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mantine-color-brand-4) 20%, transparent);
+}
+
+/* ---------------------------------------------------------------- selection controls ----- */
+
+/* Checkbox / Radio share the Figma gradient fill and the pop-in on check. */
+.controlInput:checked,
+.controlInput[data-indeterminate] {
+  background-image: linear-gradient(
+    250deg,
+    var(--mantine-color-brand-5) 37%,
+    var(--mantine-color-brand-6) 63%
+  );
+  border-color: transparent;
+}
+
+.controlIcon {
+  transition: transform var(--sds-motion-fast) var(--sds-motion-ease);
+}
+
+.controlInput:checked + .controlIcon,
+.controlInput[data-indeterminate] + .controlIcon {
+  animation: sds-pop-in var(--sds-motion-fast) var(--sds-motion-ease);
+}
+
+@keyframes sds-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---------------------------------------------------------------- pagination ------------- */
+
+.paginationControl {
+  transition:
+    background-color var(--sds-motion-fast) var(--sds-motion-ease),
+    color var(--sds-motion-fast) var(--sds-motion-ease),
+    transform var(--sds-motion-fast) var(--sds-motion-ease);
+}
+
+.paginationControl:not([data-active]):hover {
+  background-color: var(--sds-overlay-hover);
+  color: var(--mantine-color-brand-2);
+}
+
+.paginationControl:not([data-active]):active {
+  transform: scale(0.9);
+}
+
+/* ---------------------------------------------------------------- badge ------------------ */
+
+/*
+ * Figma's Tag is sentence-case 14px semibold; Mantine's Badge defaults to uppercase with letter
+ * spacing, so that is unset here rather than at every call site.
+ */
+.badge {
+  text-transform: none;
+  font-weight: var(--mantine-font-weight-medium);
+  letter-spacing: 0;
+}
+
+/* ---------------------------------------------------------------- chip ------------------- */
+
+.chipLabel {
+  transition:
+    border-color var(--sds-motion-fast) var(--sds-motion-ease),
+    transform var(--sds-motion-fast) var(--sds-motion-ease);
+}
+
+.chipLabel:active {
+  transform: scale(0.95);
+}

@@ -2,45 +2,49 @@ import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { TableOfContents } from './TableOfContents'
 
-const items = [
+const ITEMS = [
   { id: 'intro', label: 'Introduction' },
-  { id: 'install', label: 'Installation' },
-  { id: 'npm', label: 'With npm', level: 2 },
-  { id: 'yarn', label: 'With yarn', level: 2 },
-  { id: 'tokens', label: 'Design tokens' },
+  { id: 'getting-started', label: 'Getting started' },
+  { id: 'install', label: 'Installation', level: 2 },
+  { id: 'theming', label: 'Theming', level: 2 },
   { id: 'components', label: 'Components' },
-  { id: 'contributing', label: 'Contributing' },
+  { id: 'api', label: 'API reference' },
 ]
 
 const meta = {
   title: 'Components/Table of Contents',
   component: TableOfContents,
   parameters: {
-    layout: 'padded',
+    layout: 'centered',
     docs: {
       description: {
         component:
-          'In-page outline navigation. Entries with `level > 1` are indented; the entry matching `activeId` is highlighted per the Figma active-item state.',
+          'Vertical section nav with a rule down the left edge that thickens and takes the brand colour on the active entry. Mantine has no equivalent primitive, so this is composed from `Stack`/`Group`/`Anchor`.',
       },
     },
   },
-  argTypes: {
-    items: { control: false },
-    onItemClick: { control: false },
-  },
-  args: { items, heading: 'Outline', activeId: 'tokens' },
+  args: { items: ITEMS, heading: 'Outline', activeId: 'getting-started' },
 } satisfies Meta<typeof TableOfContents>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Playground: Story = {
+export const Playground: Story = {}
+
+export const Interactive: Story = {
+  parameters: {
+    docs: { description: { story: 'Click an entry to move the active marker.' } },
+  },
   render: (args) => {
-    const [activeId, setActiveId] = useState(args.activeId)
+    const [activeId, setActiveId] = useState('intro')
     return <TableOfContents {...args} activeId={activeId} onItemClick={setActiveId} />
   },
 }
 
-export const FlatList: Story = {
-  args: { items: items.filter((item) => !item.level), heading: 'On this page' },
+export const NoActiveItem: Story = {
+  args: { activeId: undefined },
+}
+
+export const CustomHeading: Story = {
+  args: { heading: 'On this page' },
 }

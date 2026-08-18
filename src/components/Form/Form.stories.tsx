@@ -9,12 +9,9 @@ const meta = {
     docs: {
       description: {
         component:
-          'Assembled glass-panel lead-capture form. Maps to Figma node `24140:3535`. The field set is fixed to match the source design — only the heading, description, and submit label are configurable.',
+          'Lead-capture form — Figma "Form" (node `21405:74359`, Format=Short). A glass panel wrapping the standard field set. All field chrome, focus states and the submit button come from the theme, so this component only describes fields and layout.',
       },
     },
-  },
-  argTypes: {
-    onSubmit: { control: false },
   },
   args: {
     heading: 'Get the solution brief',
@@ -23,7 +20,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[760px] max-w-full">
+      <div style={{ width: 600, maxWidth: '100%' }}>
         <Story />
       </div>
     ),
@@ -35,7 +32,6 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
 
-export const Defaults: Story = {
-  name: 'Default copy',
+export const DefaultCopy: Story = {
   args: { heading: undefined, description: undefined, submitLabel: undefined },
 }

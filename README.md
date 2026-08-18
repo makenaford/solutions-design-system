@@ -1,11 +1,15 @@
 # Solutions Design System
 
-React + TypeScript + Tailwind component library generated from the Figma **"Solutions Library- 2026"** design library (file key `KihJKyGA20stc2SSjAlxYU`).
+React component library built on **Mantine v9**, generated from the Figma library
+**"Solutions Library- 2026"** (file key `KihJKyGA20stc2SSjAlxYU`).
+
+📖 **[Storybook docs](https://makenaford.github.io/solutions-design-system/)**
 
 ## Install
 
-Requires [pnpm](https://pnpm.io) (this repo does not use npm/yarn). Version and Node requirement
-are pinned in `package.json`'s `packageManager`/`engines` fields.
+Requires [pnpm](https://pnpm.io) (this repo does not use npm/yarn). The pnpm version and Node
+requirement are pinned in `package.json`'s `packageManager` / `engines` fields — Mantine v9 needs
+**Node ≥ 22.13** and **React ≥ 19.2**.
 
 ```bash
 pnpm install
@@ -13,69 +17,126 @@ pnpm install
 
 ### Workspace security policies
 
-`pnpm-workspace.yaml` sets a few supply-chain hardening options for this repo — see the comments
-in that file for details:
+`pnpm-workspace.yaml` sets supply-chain hardening options for this repo — see the comments in that
+file for details:
 
 - `engineStrict: true` — fail instead of warn if the running Node version doesn't satisfy `engines`.
 - `minimumReleaseAge: 10080` — don't install any dependency (direct or transitive) until it's been
   published for at least a week.
 - `blockExoticSubdeps: true` — only direct dependencies may resolve from a git/tarball URL.
 - `trustPolicy: no-downgrade` with `trustPolicyIgnoreAfter: 131040` — refuse a publisher
-  trust-level downgrade for a version already in the lockfile, unless that version has been out
-  for more than a quarter year.
+  trust-level downgrade for a version already in the lockfile, unless that version has been out for
+  more than a quarter year.
 
 ## Use
 
 ```tsx
-import { Button, Input, Badge } from 'solutions-design-system'
-import 'solutions-design-system/dist/style.css'
+import '@mantine/core/styles.css'
+import { SolutionsProvider, Button, Card, TextInput } from 'solutions-design-system'
 
-function Example() {
+function App() {
   return (
-    <div>
-      <Badge>New</Badge>
-      <Input label="Email" placeholder="you@company.com" />
-      <Button color="primary" variant="solid" size="medium">
-        Continue
-      </Button>
-    </div>
+    <SolutionsProvider defaultColorScheme="dark">
+      <Card title="Get started" description="Everything is themed from Figma.">
+        <TextInput label="Work email" placeholder="you@company.com" />
+        <Button>Continue</Button>
+      </Card>
+    </SolutionsProvider>
   )
 }
 ```
 
-## Structure
+`@mantine/core`, `@mantine/hooks`, `react` and `react-dom` are peer dependencies.
 
-- `src/tokens/` — colors, typography, spacing, and shadow tokens extracted from the Figma library's variables and styles. Wired into `tailwind.config.ts` as theme extensions.
-- `src/components/` — one folder per component, each exporting a named component + a `<Name>Props` TypeScript type, plus any real exported icon/image assets used by that component.
-- `src/assets/glass-icons/` — the exported "glass icon" illustration set (Figma's `card-icon variable` component), organized by category. Any illustrative icon inside a card (`Card`, `IconCard`, and their Storybook examples) should use one of these rather than a hand-drawn placeholder — import the specific `.svg` and render it with `<img src={icon} className="size-full" />`, matching the existing usage in `Card.stories.tsx`/`IconCard.stories.tsx`.
+## Architecture
+
+The design system is **mostly a Mantine theme**. Rather than wrapping every primitive, the Figma
+styling is configured centrally and the underlying Mantine components are re-exported, so:
+
+- A treatment is defined **once** and reached through a `variant` prop — `<Card variant="glass">`,
+  `<Button variant="outline">` — never repeated at call sites.
+- Components take **Mantine's own props**, so the Mantine docs apply directly.
+- Only components with structure of their own are wrapped.
+
+```
+src/theme/
+  tokens.ts             Raw Figma values for both modes — the only place a colour is written
+  theme.ts              createTheme(): colours, spacing, radius, typography, shadows
+  components.ts         Per-component defaults + variant class wiring
+  components.module.css Each shared treatment, written exactly once
+  cssVariables.ts       Semantic tokens as --sds-* variables that flip with the colour scheme
+  SolutionsProvider.tsx MantineProvider preconfigured with the above
+
+src/components/         Compositions: Card, IconCard, Form, Search, TableOfContents
+src/stories/            Stories for the themed Mantine primitives
+src/assets/glass-icons/ Exported glass icon set, by category
+src/figma/              Code Connect templates
+```
+
+### Tokens
+
+All tokens are read from Figma via the Figma MCP, for **both** colour modes:
+
+| Mode | Figma frame | Node |
+| --- | --- | --- |
+| Light | `UI Components — Light Mode` | `24146:44359` |
+| Dark | `UI Components — Dark Mode` | `24148:4298` |
+
+Two things worth knowing:
+
+- The `Neutral/01`–`Neutral/10` ramp **inverts between modes**, so it's registered as a Mantine
+  [`virtualColor`](https://mantine.dev/theming/colors/) — `c="neutral.5"` reads the same in either
+  mode.
+- Semantic, non-ramp values (text, card surfaces, glass, tab gradients) are emitted as `--sds-*`
+  CSS variables by a `cssVariablesResolver`, so they switch automatically with
+  `data-mantine-color-scheme`.
+
+Dark is the library's native mode in Figma and is the provider default.
 
 ## Components
 
-Accordion, Badge, Button, Card, Checkbox, Form, IconCard, Input, Label, Pagination, Radio, Search, TableOfContents, Tabs, Tag.
+**Compositions** — `Card`, `IconCard`, `Form`, `Search`, `TableOfContents`.
 
-`Card` maps to the Figma **card-main** component (node `16728:26513`) and models its `align`
-(vertical/horizontal) and `padding` (true/false) variants as props, with slots for image, icon,
-title/description, top/main/bottom content. The "Special Cards" shown alongside card-main in
-Figma (Resource, Stat Highlight, CS-Stat, CS-Quote, Quick Link, Icon-Left, ...) aren't separate
-components — they're this same `Card` composed with different slot content. See the Storybook
-stories for examples of each.
+`Card` maps to the Figma `card-main` component (node `16728:26513`) and models its slots (image,
+top content, header, two main-content slots, bottom content) plus its `orientation` axis. The
+"Special Cards" in Figma (Resource, Stat Highlight, CS-Stat, CS-Quote, Quick Link, Icon-Left) are
+this same `Card` composed with different slot content — see the Storybook stories.
+
+**Themed Mantine primitives** — `Button`, `Badge`, `Chip`, `Checkbox`, `Radio`, `TextInput`,
+`Select`, `Tabs`, `Accordion`, `Pagination`, `Paper`, `Group`, `Stack`, `Text`, `Title`, `Anchor`,
+`Image`, `Box`, `Divider`.
+
+Illustrative icons inside cards should come from `src/assets/glass-icons/` (the Figma
+`card-icon variable` set) rather than a hand-drawn placeholder — import the `.svg` and render it
+at 48px, as the `Card` / `IconCard` stories do.
+
+> **Tables** are the one exception to Mantine: build them with
+> [TanStack Table](https://tanstack.com/table).
+
+## Migrating from the Tailwind version
+
+| Before | Now |
+| --- | --- |
+| `Input` | `TextInput` |
+| `Tag` | `Badge` |
+| `Label` | `Chip` |
+| `Button`, `Checkbox`, `Radio`, `Tabs`, `Accordion`, `Pagination`, `Badge` | same names, now Mantine's components with Mantine props |
+| `Card`, `IconCard`, `Form`, `Search`, `TableOfContents` | unchanged names, rebuilt on Mantine |
+
+Prop shapes follow Mantine rather than the previous bespoke APIs — `<Button color="primary"
+variant="solid">` becomes `<Button variant="filled">`, and the list-driven `Tabs tabs={[…]}` /
+`Accordion items={[…]}` APIs are now Mantine's compound `Tabs.Tab` / `Accordion.Item` children.
 
 ## Verified
 
-`pnpm install && pnpm run build` (tsc + vite) passes clean. The component set was also visually smoke-tested in a live browser preview (see `preview/main.tsx`), which caught and fixed four real bugs before this was usable:
+`pnpm build` (tsc + vite) and `pnpm build-storybook` both pass clean, and every component was
+checked in the browser in **both** colour schemes. Two real bugs were caught that way during the
+migration:
 
-- **Checkbox** — the checkmark glyph was rotated the wrong direction and rendered as a `>` arrow instead of a tick.
-- **Accordion** — the expand/collapse chevron used an invalid Tailwind class (`-rotate-135`, not a real utility — Tailwind only ships 45/90/180 by default) so it never rotated, and the expanded-state icon transform pointed the wrong way; the panel content also had no text color set, making it invisible on the dark background.
-- **Input** — when a `label` was passed alongside a native `placeholder`, both rendered on top of each other in the resting (unfocused, empty) state. The placeholder now only shows once the label has floated up.
-- **IconCard** — the icon was left-aligned above centered title/description text in the vertical layout; now centered to match.
-
-## Known gaps to review against the live Figma file
-
-A handful of components were generated from an ambiguous or mismatched Figma node and are worth a design review (not a code bug, but worth confirming against source):
-
-- **Pagination** — no assembled pagination bar existed at the given node; rebuilt from the library's link/arrow styles.
-- **Search** — no standalone Search input was reachable via the API; built from the search icon + Input field chrome.
-- **Input** — the given node resolved to a Dropdown component, not Input; built from the actual Input component set instead.
-- **Label** — the given node's reusable component is named "Chip" in Figma; there's a separate "Label CTA" component that may have been the intended target.
-- **Button** — the given node was a single instance, not the component set; built from the actual component set found elsewhere in the file.
-- **IconCard** — only the vertical/desktop variant was available to inspect; horizontal layout is inferred, not traced.
+- **Tabs** — the `Components/Glass Tab/bg-gradient-*` tokens were applied to the tab *bar* rather
+  than the *selected pill*. That reads acceptably in dark mode (both are translucent) but paints
+  the entire bar solid blue in light mode, where those tokens resolve to brand blues. The bar uses
+  `tab fill 1`; the pill uses the gradients.
+- **Design Tokens docs page** — content in an MDX body renders outside the preview decorators, so
+  the token tables had no `MantineProvider` and the page crashed. They are now defined as stories
+  and embedded, which also makes them follow the colour-scheme toolbar.

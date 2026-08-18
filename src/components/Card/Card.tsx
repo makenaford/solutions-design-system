@@ -1,60 +1,38 @@
-import type { CSSProperties, ReactNode } from 'react'
-import clsx from 'clsx'
-import { paragraph, type TextStyle } from '../../tokens/typography'
+import type { ReactNode } from 'react'
+import { Card as MantineCard, Group, Image, Stack, Text, Title } from '@mantine/core'
+import type { CardProps as MantineCardProps } from '@mantine/core'
 
-export type CardAlign = 'vertical' | 'horizontal'
-
-export interface CardProps {
-  /** Layout axis from the Figma "Align" variant — content stacked (vertical) or beside the image (horizontal). */
-  align?: CardAlign
-  /**
-   * Matches the Figma "Padding" variant. `true` (default) renders the card as a self-contained
-   * glass surface (border, background, shadow, blur, padding) — use this most of the time.
-   * `false` renders bare content with no surface or padding, for embedding inside a container
-   * that already provides its own border/background (e.g. a "Special Card" composition).
-   */
-  padding?: boolean
-  /** Image/visual slot, e.g. a thumbnail or illustration. Rendered in a 3:2 rounded frame. Omit to hide (Figma "Show Image"). */
-  image?: ReactNode
-  /** Icon slot in the card header, in a 48x48 box (matches the Figma "card-icon" glass/medium size). */
+export interface CardProps extends Omit<MantineCardProps, 'title' | 'children'> {
+  /** Figma "Align": content stacked above the image, or beside it. */
+  orientation?: 'vertical' | 'horizontal'
+  /** Image slot. A string is rendered as the image source; a node is rendered as-is. */
+  image?: ReactNode | string
+  /** Icon slot in the header, sized to the Figma 48px `card-icon` box. */
   icon?: ReactNode
-  /** Card title. */
   title: string
-  /** Optional supporting copy under the title. */
   description?: string
-  /** Slot above the header (Figma "Top Content"). */
+  /** Figma "Top Content" slot, above the header. */
   topContent?: ReactNode
-  /** First slot below the header (Figma "Main Content 1") — e.g. a stat, list, or progress bar. */
+  /** Figma "Main Content 1" / "Main Content 2" slots, below the header. */
   mainContent1?: ReactNode
-  /** Second slot below the header (Figma "Main Content 2"). */
   mainContent2?: ReactNode
-  /** Slot at the end of the card (Figma "Bottom Content") — e.g. a button or link row. */
+  /** Figma "Bottom Content" slot. */
   bottomContent?: ReactNode
-  className?: string
 }
 
-const toTextStyle = (style: TextStyle): CSSProperties => ({
-  fontFamily: style.fontFamily,
-  fontSize: style.fontSize,
-  fontWeight: style.fontWeight,
-  lineHeight: `${style.lineHeight}px`,
-  letterSpacing: style.letterSpacing,
-})
-
 /**
- * Card — Figma "card-main" (node `16728:26513`), the base component behind every card layout in
- * the library. Its three fetched variants (Align=Vertical/Padding=True, Align=Horizontal/
- * Padding=True, Align=Vertical/Padding=False) share one content structure — image, optional top
- * content, a header (icon + title + description), up to two main-content slots, and bottom
- * content — which this component models directly as props/slots rather than as a fixed layout.
+ * Card — Figma `card-main` (node `16728:26513`).
  *
- * The "Special Cards" shown alongside card-main in Figma (Resource, CS-Stat, CS-Details, CS-Quote,
- * Icon-Center, Quick Link, Icon-Left, Stat Highlight) are all this same component composed with
- * different slot content — see the Storybook stories for examples of each, built from this Card.
+ * Models the component's slot structure (image, top content, header, two main-content slots,
+ * bottom content) and its "Align" axis. Figma's "Padding=False" variant is reached with
+ * `withBorder={false} shadow="none" p={0} variant={undefined}`, or more simply by passing
+ * `variant={undefined}` — the glass surface comes from `variant="glass"`, which is the default.
+ *
+ * The "Special Cards" in Figma (Resource, CS-Stat, CS-Quote, Quick Link, Icon-Left, …) are all
+ * this component with different slot content — see the stories.
  */
 export function Card({
-  align = 'vertical',
-  padding = true,
+  orientation = 'vertical',
   image,
   icon,
   title,
@@ -63,78 +41,56 @@ export function Card({
   mainContent1,
   mainContent2,
   bottomContent,
-  className,
+  variant = 'glass',
+  ...props
 }: CardProps) {
-  const isHorizontal = align === 'horizontal'
+  const imageSlot =
+    typeof image === 'string' ? <Image src={image} alt="" radius="md" /> : image
 
   const header = (
-    <div className="flex w-full flex-col items-start gap-3">
-      {icon && <div className="flex size-[48px] shrink-0 items-center justify-center">{icon}</div>}
-      <div className="flex w-full flex-col items-start gap-1">
-        <p className="w-full text-surfaces-textPrimary" style={toTextStyle(paragraph.largeSemiBold)}>
+    <Stack gap="sm">
+      {icon ? <Group h={48} w={48} justify="center" align="center">{icon}</Group> : null}
+      <Stack gap={4}>
+        <Title order={4} size="xl" c="var(--sds-text-primary)">
           {title}
-        </p>
-        {description && (
-          <p className="w-full text-surfaces-textSecondary" style={toTextStyle(paragraph.default)}>
-            {description}
-          </p>
-        )}
-      </div>
-    </div>
+        </Title>
+        {description ? <Text size="lg">{description}</Text> : null}
+      </Stack>
+    </Stack>
   )
 
-  const imageSlot = image && (
-    <div className="aspect-[3/2] w-full shrink-0 overflow-hidden rounded-lg border border-[rgba(111,160,255,0.2)]">
-      {image}
-    </div>
-  )
-
-  // card-header + the two main-content slots share a tighter gap than the rest of the card, so
-  // they read as one text block regardless of whether the outer card renders with padding.
-  const contentGroup = (
-    <div className="flex w-full flex-col items-start gap-large">
+  const body = (
+    <Stack gap="md" flex={1} miw={0}>
+      {topContent}
       {header}
-      {mainContent1 && <div className="w-full">{mainContent1}</div>}
-      {mainContent2 && <div className="w-full">{mainContent2}</div>}
-    </div>
+      {mainContent1}
+      {mainContent2}
+      {orientation === 'horizontal' ? bottomContent : null}
+    </Stack>
   )
 
-  if (isHorizontal) {
+  if (orientation === 'horizontal') {
     return (
-      <div
-        className={clsx(
-          'flex items-center gap-[24px]',
-          padding &&
-            'rounded-lg border border-components-glassLine-1 bg-surfaces-cardBgBlue p-[40px] shadow-glassCard backdrop-blur-[100px]',
-          className
-        )}
-      >
-        <div className="flex min-w-0 flex-1 flex-col items-start gap-[10px]">
-          {topContent && <div className="w-full">{topContent}</div>}
-          {header}
-          {mainContent1 && <div className="w-full">{mainContent1}</div>}
-          {mainContent2 && <div className="w-full">{mainContent2}</div>}
-          {bottomContent && <div className="w-full pt-large">{bottomContent}</div>}
-        </div>
-        {imageSlot && <div className="min-w-0 flex-1">{imageSlot}</div>}
-      </div>
+      <MantineCard variant={variant} p="xl" {...props}>
+        <Group align="center" gap="lg" wrap="nowrap">
+          {body}
+          {imageSlot ? (
+            <MantineCard.Section flex={1} miw={0} m={0}>
+              {imageSlot}
+            </MantineCard.Section>
+          ) : null}
+        </Group>
+      </MantineCard>
     )
   }
 
   return (
-    <div
-      className={clsx(
-        'flex flex-col items-start',
-        padding ? 'gap-[20px]' : 'gap-large',
-        padding &&
-          'rounded-lg border border-components-glassLine-1 bg-surfaces-cardBgBlue p-[20px] shadow-glassCard backdrop-blur-[100px]',
-        className
-      )}
-    >
-      {imageSlot}
-      {topContent && <div className="w-full">{topContent}</div>}
-      {contentGroup}
-      {bottomContent && <div className="w-full">{bottomContent}</div>}
-    </div>
+    <MantineCard variant={variant} {...props}>
+      <Stack gap="md">
+        {imageSlot}
+        {body}
+        {bottomContent}
+      </Stack>
+    </MantineCard>
   )
 }

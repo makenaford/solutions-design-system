@@ -1,89 +1,72 @@
-import { Meta } from '@storybook/addon-docs/blocks'
-import { brand, neutral, baseNeutral, status, surfaces, action } from '../tokens/colors'
-import { paragraph, heading, action as actionText, smallCaps, fontFamily } from '../tokens/typography'
-import { spacing, size, radius } from '../tokens/spacing'
-import { boxShadow } from '../tokens/shadows'
-import { ColorTable, TypeTable, ScaleTable, RadiusTable, ShadowTable } from './TokenTable'
+import { Meta, Story } from '@storybook/addon-docs/blocks'
+import * as DesignTokens from './DesignTokens.stories'
 
-<Meta title="Overview/Design Tokens" />
+<Meta of={DesignTokens} />
 
-# Design tokens
+# Design Tokens
 
-Every token below is extracted from the Figma **"Solutions Library- 2026"** library and wired into
-`tailwind.config.ts` as a theme extension. Import them as values from `solutions-design-system`, or
-use the Tailwind class shown in each table.
+Every token below is read out of the Figma library **"Solutions Library- 2026"**
+(file key `KihJKyGA20stc2SSjAlxYU`) via the Figma MCP, for **both** colour modes:
 
-```tsx
-import { brand, paragraph, spacing } from 'solutions-design-system'
-```
+- light — `UI Components — Light Mode` (node `24146:44359`)
+- dark — `UI Components — Dark Mode` (node `24148:4298`)
 
-## Color
+They live in `src/theme/tokens.ts`, which is the only place in the library allowed to contain a
+raw colour. Everything else references them through the Mantine theme or a `--sds-*` CSS variable.
 
-### Brand
+Use the **Color scheme** control in the toolbar to switch modes — the swatches on this page react
+to it.
 
-<ColorTable group="brand" tokens={brand} />
+## Brand
 
-### Neutral
+`Brand/Primary/*` and the related action/CTA blues, ordered lightest to darkest to satisfy
+Mantine's ten-shade contract. Index 6 is `Brand/Primary/Primary` and is the theme's
+`primaryColor` / `primaryShade`; it is the same value in both modes.
 
-The primary neutral ramp, used for surfaces and borders on the dark page background.
+<Story of={DesignTokens.Brand} />
 
-<ColorTable group="neutral" tokens={neutral} />
+## Neutral
 
-### Base neutral
+Figma's `Neutral/01`–`Neutral/10`. This ramp **inverts between modes** — in light it runs
+near-white to near-black, in dark it runs the other way. It is registered as a Mantine
+[`virtualColor`](https://mantine.dev/theming/colors/), so `c="neutral.5"` means the same thing
+visually in either mode.
 
-<ColorTable group="base-neutral" tokens={baseNeutral} />
+`Neutral/00` is pure white in both modes and is exposed as `theme.white` rather than a ramp entry.
 
-### Status
+<Story of={DesignTokens.Neutral} />
 
-<ColorTable group="status" tokens={status} />
+## Semantic surfaces
 
-### Surfaces
+Mode-dependent values that aren't colour ramps — text, card surfaces, the glass treatment, tab
+gradients. These are emitted as `--sds-*` CSS variables through the theme's
+`cssVariablesResolver`, so they flip automatically with `data-mantine-color-scheme`.
 
-Page and card backgrounds plus the text colors intended to sit on them.
-
-<ColorTable group="surfaces" tokens={surfaces} />
-
-### Action
-
-Interactive-element colors, split by state.
-
-<ColorTable group="action" tokens={action} />
-
-## Typography
-
-Four families are in use: `{fontFamily.sans}` for body and headings, `{fontFamily.label}` for
-labels and badges, `{fontFamily.ui}` for dense UI, and `{fontFamily.code}` for code.
-
-### Paragraph
-
-<TypeTable group="paragraph" tokens={paragraph} />
-
-### Heading
-
-<TypeTable group="heading" tokens={heading} />
-
-### Action
-
-<TypeTable group="actionText" tokens={actionText} />
-
-### Small caps
-
-<TypeTable group="smallCaps" tokens={smallCaps} />
+<Story of={DesignTokens.Semantic} />
 
 ## Spacing
 
-### Numeric scale
+Figma's `Spacing/*` and the `xsm | small | medium | large | xlg` size scale.
 
-<ScaleTable tokens={spacing} classPrefix="p" />
+<Story of={DesignTokens.Spacing} />
 
-### Named sizes
+## Radius
 
-<ScaleTable tokens={size} classPrefix="gap" />
+Figma's `Border Radius/*`. `Border Radius/Default` (10px) is the theme's `defaultRadius`, mapped
+to the `lg` key.
 
-### Border radius
+<Story of={DesignTokens.Radius} />
 
-<RadiusTable tokens={radius} />
+## Type scale
 
-## Elevation
+Figma's `Paragraph/*` sizes. The family is **Source Sans 3** throughout, with **Manrope** for
+label styles and **Source Code Pro** for code.
 
-<ShadowTable tokens={boxShadow} />
+<Story of={DesignTokens.TypeScale} />
+
+## Status and accent
+
+`error`, `warning`, `success`, `info` and `accent` are registered as Mantine colours and flip
+between modes, so `color="error"` works on any Mantine component. Figma publishes a single value
+per status per mode rather than a full ramp, so these are flat tuples — no intermediate shades
+have been invented. See the **Badge → Colors** story for them rendered side by side.

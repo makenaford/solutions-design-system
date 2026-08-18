@@ -4,71 +4,89 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 # Solutions Design System
 
-A React + TypeScript + Tailwind component library generated from the Figma
-**"Solutions Library- 2026"** library (file key `KihJKyGA20stc2SSjAlxYU`).
+A React component library built on **Mantine v9**, generated from the Figma library
+**"Solutions Library- 2026"** (file key `KihJKyGA20stc2SSjAlxYU`).
 
-Every color, type scale, spacing step, and shadow in this library is extracted from that Figma
-file's variables and styles — so design and code share one source of truth rather than drifting
-apart. Components are additionally wired to their Figma nodes through
-[Code Connect](?path=/docs/overview-figma-code-connect--docs), which makes Figma's Dev Mode inspect
-panel show the real React snippet instead of generated CSS.
+Every colour, type scale, spacing step and radius is read out of that Figma file's variables — for
+both light and dark mode — so design and code share one source of truth rather than drifting apart.
+
+## How this library is put together
+
+The design system is **mostly a Mantine theme**. Rather than wrapping every primitive, the Figma
+styling is configured centrally in `src/theme/components.ts` and the underlying Mantine components
+are re-exported. That means:
+
+- A treatment is defined **once** and reached through a `variant` prop — `<Card variant="glass">`,
+  `<Button variant="outline">` — instead of being repeated at call sites.
+- Components take **Mantine's own props** (`variant`, `size`, `radius`, `color`, `disabled`, …), so
+  the Mantine documentation applies directly.
+- Only components with structure of their own are wrapped: `Card`, `IconCard`, `Form`, `Search`
+  and `TableOfContents`.
 
 ## Install
 
 ```bash
-pnpm install
+pnpm add solutions-design-system @mantine/core @mantine/hooks
 ```
+
+`@mantine/core`, `@mantine/hooks`, `react` and `react-dom` are peer dependencies. Mantine v9
+requires React 19.2 or newer.
 
 ## Use
 
-```tsx
-import { Button, Input, Badge } from 'solutions-design-system'
-import 'solutions-design-system/dist/style.css'
+Wrap your app in `SolutionsProvider` once — it applies the theme and publishes the `--sds-*`
+variables that the components rely on.
 
-function Example() {
+```tsx
+import '@mantine/core/styles.css'
+import { SolutionsProvider, Button, Card, TextInput } from 'solutions-design-system'
+
+function App() {
   return (
-    <div>
-      <Badge>New</Badge>
-      <Input label="Email" placeholder="you@company.com" />
-      <Button color="primary" variant="solid" size="medium">
-        Continue
-      </Button>
-    </div>
+    <SolutionsProvider defaultColorScheme="dark">
+      <Card title="Get started" description="Everything is themed from Figma.">
+        <TextInput label="Work email" placeholder="you@company.com" />
+        <Button>Continue</Button>
+      </Card>
+    </SolutionsProvider>
   )
 }
 ```
 
+Dark is the library's native mode in Figma, so it is the default; pass
+`defaultColorScheme="light"` or `"auto"` to change that.
+
 ## What's in here
 
-- **[Design tokens](?path=/docs/overview-design-tokens--docs)** — colors, typography, spacing, and
-  shadows, with the Tailwind class for each.
-- **Components** — 15 components, each with a props table and live controls. Use the **Playground**
-  story on any component to change props and copy the resulting code.
+- **Overview → Design Tokens** — every token, in both modes, with the Figma name it came from.
+- **Components** — each component with a props table and live controls. Use the **Playground**
+  story to experiment, and the **Color scheme** toolbar control to check both modes.
 
-## How props map to Figma
+## Moving from the pre-Mantine version
 
-Figma variant axes become props, with one deliberate exception: the `State` axis
-(Hover / Focus / Pressed) is implemented with CSS pseudo-classes instead of props, because those
-states belong to the browser rather than to your application. `Disabled` uses the native HTML
-attribute. Where a state *is* application-driven — `Label`'s `selected` and `dragged`, for
-instance — it stays a real prop.
+The library previously shipped hand-rolled Tailwind components. Those have been replaced by themed
+Mantine primitives:
+
+| Before | Now |
+| --- | --- |
+| `Input` | `TextInput` |
+| `Tag` | `Badge` |
+| `Label` | `Chip` |
+| `Button`, `Checkbox`, `Radio`, `Tabs`, `Accordion`, `Pagination`, `Badge` | same names, now Mantine's components with Mantine props |
+| `Card`, `IconCard`, `Form`, `Search`, `TableOfContents` | unchanged names, rebuilt on Mantine |
+
+Prop shapes follow Mantine rather than the previous bespoke APIs — for example
+`<Button color="primary" variant="solid">` becomes `<Button variant="filled">`, and the
+list-driven `Tabs tabs={[…]}` / `Accordion items={[…]}` APIs are now Mantine's compound
+`Tabs.Tab` / `Accordion.Item` children.
 
 ## Components with open design questions
 
-A handful of components were generated from an ambiguous or mismatched Figma node. They work, but
-they are worth confirming against the source file before you treat them as final:
+A few components were originally generated from an ambiguous or mismatched Figma node and are
+still worth confirming against the source file:
 
-| Component | What to confirm |
-| --- | --- |
-| `Pagination` | No assembled pagination bar existed in Figma; rebuilt from the library's link and arrow styles. |
-| `Search` | No standalone Search input was reachable; built from the search icon plus Input field chrome. |
-| `Input` | The handed-off node resolved to a Dropdown; built from the actual Input component set instead. |
-| `Label` | The node's reusable component is named "Chip". A separate "Label CTA" component may have been the intended target. |
-| `Button` | The handed-off node was a single instance, not the component set; built from the real set found elsewhere. |
-| `IconCard` | Only the vertical desktop variant was inspectable; the horizontal layout is inferred, not traced. |
-
-## Contributing
-
-Add the component folder under `src/components/`, export it from `src/index.ts`, and write a
-`*.stories.tsx` file beside it. Storybook picks it up automatically, and the docs page on this site
-regenerates on the next push to `main`.
+- **Search** — no standalone Search input was reachable via the API; built from the search icon
+  plus the standard input chrome.
+- **IconCard** — only the vertical/desktop variant was available to inspect; the horizontal layout
+  is inferred rather than traced.
+- **Pagination** — no assembled pagination bar existed at the given node.

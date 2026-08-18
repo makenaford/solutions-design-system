@@ -1,0 +1,39 @@
+.list {
+  list-style: none;
+}
+
+.item {
+  width: 100%;
+}
+
+/* The rule down the left edge — 1px and neutral by default, 3px and brand-coloured when active. */
+.rule {
+  flex-shrink: 0;
+  align-self: stretch;
+  min-height: 56px;
+  width: 1px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-neutral-2);
+  transition:
+    width var(--sds-motion-base) var(--sds-motion-ease),
+    background-color var(--sds-motion-base) var(--sds-motion-ease);
+}
+
+.rule[data-active] {
+  width: 3px;
+  background-color: var(--mantine-color-brand-6);
+}
+
+.link {
+  flex: 1;
+  padding-block: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  transition:
+    color var(--sds-motion-fast) var(--sds-motion-ease),
+    background-color var(--sds-motion-fast) var(--sds-motion-ease);
+}
+
+.link:hover {
+  background-color: var(--sds-overlay-hover);
+  color: var(--sds-text-primary);
+}

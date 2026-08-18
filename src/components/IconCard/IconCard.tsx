@@ -1,92 +1,58 @@
-import type { CSSProperties, ReactNode } from 'react'
-import clsx from 'clsx'
-import { paragraph, type TextStyle } from '../../tokens/typography'
+import type { ReactNode } from 'react'
+import { Card, Group, Stack, Text, Title } from '@mantine/core'
+import type { CardProps } from '@mantine/core'
 
-/**
- * Figma reference: "Solutions Library- 2026" (KihJKyGA20stc2SSjAlxYU), node 22731:39553
- * — "Icon Card/Vertical/Destop/Yes".
- *
- * The retrieved instance only exercised the "Vertical" + "Desktop" branch of what the layer
- * naming implies is a larger variant set (Vertical/Horizontal, Desktop/Mobile, plus a third
- * Yes/No axis whose meaning wasn't resolvable from a single instance). `orientation` and `size`
- * below are a best-effort modeling of the two axes that are unambiguous from the node name;
- * the horizontal layout is an inferred-but-reasonable interpretation, not something pulled
- * directly from a fetched Horizontal variant.
- */
-
-const toTextStyle = (style: TextStyle): CSSProperties => ({
-  fontFamily: style.fontFamily,
-  fontSize: style.fontSize,
-  fontWeight: style.fontWeight,
-  lineHeight: `${style.lineHeight}px`,
-  letterSpacing: `${style.letterSpacing}px`,
-})
-
-export interface IconCardProps {
-  /** Icon/visual rendered in the card's icon slot. Consumer-supplied — not baked into the card. */
+export interface IconCardProps extends Omit<CardProps, 'title' | 'children'> {
+  /** Icon/visual for the card. Use one of the library's glass icons from `src/assets/glass-icons/`. */
   icon: ReactNode
-  /** Card title. */
   title: string
-  /** Optional supporting copy shown under the title. */
   description?: string
-  /** Layout direction: icon stacked above the text (default) or beside it. */
+  /** Figma layout axis — icon above the text, or beside it. */
   orientation?: 'vertical' | 'horizontal'
-  /** Sizing/width variant — desktop caps the card at 600px per the source design, mobile fills its container. */
+  /** Figma sizing variant. `desktop` caps the card at the 600px source width. */
   size?: 'desktop' | 'mobile'
-  className?: string
 }
 
-export const IconCard = ({
+/**
+ * IconCard — Figma node `22731:39553` ("Icon Card").
+ *
+ * A glass card pairing an icon with a title and supporting copy. Only the vertical/desktop variant
+ * was available to inspect in the source file, so the horizontal layout remains an inferred
+ * interpretation rather than a traced one.
+ */
+export function IconCard({
   icon,
   title,
   description,
   orientation = 'vertical',
   size = 'desktop',
-  className,
-}: IconCardProps) => {
+  variant = 'glass',
+  ...props
+}: IconCardProps) {
   const isHorizontal = orientation === 'horizontal'
 
+  const text = (
+    <Stack gap={4} ta={isHorizontal ? 'left' : 'center'} align={isHorizontal ? 'flex-start' : 'center'} w="100%">
+      <Title order={4} size="xl" c="var(--sds-text-primary)">
+        {title}
+      </Title>
+      {description ? <Text size="md">{description}</Text> : null}
+    </Stack>
+  )
+
   return (
-    <div
-      className={clsx(
-        'group flex flex-col items-start gap-5 rounded-lg border border-components-glassLine-1 bg-surfaces-cardBgBlue p-[20px] shadow-glassCard backdrop-blur-[100px]',
-        'transition-[transform,box-shadow,border-color] duration-200 ease-out',
-        'hover:-translate-y-1 hover:border-brand-lighten3/60 hover:shadow-hoverLift',
-        size === 'desktop' ? 'w-full max-w-[600px]' : 'w-full',
-        className,
-      )}
-    >
-      <div
-        className={clsx(
-          'flex w-full gap-3',
-          isHorizontal ? 'flex-row items-center' : 'flex-col items-center',
-        )}
+    <Card variant={variant} maw={size === 'desktop' ? 600 : undefined} w="100%" data-interactive {...props}>
+      <Group
+        gap="sm"
+        align="center"
+        wrap="nowrap"
+        style={{ flexDirection: isHorizontal ? 'row' : 'column' }}
       >
-        <div className="flex size-12 shrink-0 items-center justify-center transition-transform duration-200 ease-out group-hover:scale-110">
+        <Group w={48} h={48} justify="center" align="center" style={{ flexShrink: 0 }}>
           {icon}
-        </div>
-        <div
-          className={clsx(
-            'flex w-full flex-col gap-1',
-            isHorizontal ? 'items-start text-left' : 'items-center text-center',
-          )}
-        >
-          <p
-            className="w-full text-surfaces-textPrimary"
-            style={toTextStyle(paragraph.largeSemiBold)}
-          >
-            {title}
-          </p>
-          {description ? (
-            <p
-              className="w-full text-surfaces-textSecondary"
-              style={toTextStyle(paragraph.base)}
-            >
-              {description}
-            </p>
-          ) : null}
-        </div>
-      </div>
-    </div>
+        </Group>
+        {text}
+      </Group>
+    </Card>
   )
 }

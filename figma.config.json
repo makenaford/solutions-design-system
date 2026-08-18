@@ -1,7 +1,7 @@
 {
   "codeConnect": {
     "parser": "react",
-    "include": ["src/components/**/*.figma.ts"],
+    "include": ["src/figma/**/*.figma.ts"],
     "importPaths": {
       "src/components/*": "solutions-design-system"
     }

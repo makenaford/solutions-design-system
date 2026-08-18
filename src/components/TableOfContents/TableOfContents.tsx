@@ -1,81 +1,74 @@
-import clsx from 'clsx'
-import { paragraph, smallCaps } from '../../tokens/typography'
+import { Anchor, Box, Group, Stack, Text } from '@mantine/core'
+import type { StackProps } from '@mantine/core'
+import classes from './TableOfContents.module.css'
 
 export interface TableOfContentsEntry {
-  /** Anchor id (without the leading "#") this entry links/scrolls to. */
+  /** Anchor id (without the leading "#") this entry links to. */
   id: string
   label: string
-  /** Nesting depth, 1-indexed. Entries with level > 1 are indented. Defaults to 1. */
+  /** Nesting depth, 1-indexed. Entries deeper than 1 are indented. */
   level?: number
 }
 
-export interface TableOfContentsProps {
+export interface TableOfContentsProps extends Omit<StackProps, 'children' | 'onSelect'> {
   items: TableOfContentsEntry[]
-  /** Id of the currently active/in-view section, highlighted per the Figma "Active" item state. */
+  /** Id of the section currently in view, highlighted per the Figma "Active" item state. */
   activeId?: string
-  /** Called with an entry's id when its link is clicked. */
   onItemClick?: (id: string) => void
-  /** Small-caps section heading above the list. Defaults to "Outline". */
+  /** Small-caps heading above the list. */
   heading?: string
-  className?: string
 }
 
-export function TableOfContents({ items, activeId, onItemClick, heading = 'Outline', className }: TableOfContentsProps) {
+/**
+ * Table of contents — a vertical section nav with a rule down the left edge that thickens and
+ * takes the brand colour on the active entry.
+ *
+ * Mantine has no equivalent primitive, so this is composed from `Stack`/`Group`/`Anchor` with the
+ * rule and active treatment in a local CSS module.
+ */
+export function TableOfContents({
+  items,
+  activeId,
+  onItemClick,
+  heading = 'Outline',
+  ...props
+}: TableOfContentsProps) {
   return (
-    <nav aria-label={heading} className={clsx('flex w-[200px] max-w-[240px] flex-col gap-5', className)}>
-      <span
-        className="w-full uppercase text-surfaces-textSecondary"
-        style={{
-          fontFamily: smallCaps.default.fontFamily,
-          fontSize: smallCaps.default.fontSize,
-          fontWeight: smallCaps.default.fontWeight,
-          lineHeight: `${smallCaps.default.lineHeight}px`,
-          letterSpacing: smallCaps.default.letterSpacing,
-        }}
-      >
+    <Stack component="nav" aria-label={heading} gap="md" w={200} maw={240} {...props}>
+      <Text size="sm" fw={600} tt="uppercase" lts={6} c="var(--sds-text-secondary)">
         {heading}
-      </span>
+      </Text>
 
-      <ul className="flex w-full flex-col items-start">
+      <Stack component="ul" gap={0} m={0} p={0} className={classes.list}>
         {items.map((item) => {
           const isActive = item.id === activeId
-          const textStyle = isActive ? paragraph.smallSemiBold : paragraph.small
-          const level = item.level ?? 1
-
           return (
-            <li key={item.id} className="flex w-full items-stretch gap-4">
-              <span
-                aria-hidden="true"
-                className={clsx(
-                  'min-h-[56px] shrink-0 self-stretch rounded-md transition-[width,background-color] duration-200 ease-out',
-                  isActive ? 'w-[3px] bg-brand-primary' : 'w-px bg-surfaces-divider'
-                )}
-              />
-              <a
+            <Group
+              key={item.id}
+              component="li"
+              gap="md"
+              wrap="nowrap"
+              align="stretch"
+              className={classes.item}
+            >
+              <Box aria-hidden className={classes.rule} data-active={isActive || undefined} />
+              <Anchor
                 href={`#${item.id}`}
                 onClick={() => onItemClick?.(item.id)}
                 aria-current={isActive ? 'true' : undefined}
-                style={{
-                  fontFamily: textStyle.fontFamily,
-                  fontSize: textStyle.fontSize,
-                  fontWeight: textStyle.fontWeight,
-                  lineHeight: `${textStyle.lineHeight}px`,
-                  letterSpacing: textStyle.letterSpacing,
-                  marginLeft: level > 1 ? `${(level - 1) * 12}px` : undefined,
-                }}
-                className={clsx(
-                  'flex-1 rounded-default py-4 transition-[color,background-color] duration-150',
-                  isActive
-                    ? 'text-surfaces-textPrimary'
-                    : 'text-surfaces-textSecondary hover:bg-surfaces-overlayHover hover:text-surfaces-textPrimary'
-                )}
+                underline="never"
+                size="md"
+                fw={isActive ? 600 : 400}
+                c={isActive ? 'var(--sds-text-primary)' : 'var(--sds-text-secondary)'}
+                ml={item.level && item.level > 1 ? (item.level - 1) * 12 : undefined}
+                className={classes.link}
               >
                 {item.label}
-              </a>
-            </li>
+              </Anchor>
+            </Group>
           )
         })}
-      </ul>
-    </nav>
+      </Stack>
+    </Stack>
   )
 }

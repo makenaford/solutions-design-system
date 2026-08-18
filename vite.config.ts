@@ -10,7 +10,19 @@ export default defineConfig({
       fileName: 'solutions-design-system',
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      /**
+       * React and Mantine are peer dependencies — bundling them would ship a second copy of
+       * Mantine, whose provider context would not match the host application's.
+       */
+      external: ['react', 'react-dom', 'react/jsx-runtime', '@mantine/core', '@mantine/hooks'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          '@mantine/core': 'MantineCore',
+          '@mantine/hooks': 'MantineHooks',
+        },
+      },
     },
   },
 })

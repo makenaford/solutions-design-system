@@ -1,13 +1,30 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Badge, Button, Group, Stack, Text, Title } from '@mantine/core'
 import { Card } from './Card'
-import { Label } from '../Label/Label'
-import { Tag } from '../Tag/Tag'
-import { Button } from '../Button/Button'
 import iconDam from '../../assets/glass-icons/Data/DAM.svg'
 import iconAnalytics from '../../assets/glass-icons/Performance/Analytics.svg'
 import iconTestimonies from '../../assets/glass-icons/Customer Support/Testimonies.svg'
 import iconDocumentation from '../../assets/glass-icons/Education/Documentation.svg'
 import iconVerification from '../../assets/glass-icons/Security/Verification.svg'
+
+/** Renders one of the library's glass icons at the Figma 48px `card-icon` size. */
+function GlassIcon({ src }: { src: string }) {
+  return <img src={src} alt="" width={48} height={48} />
+}
+
+function PlaceholderImage() {
+  return (
+    <div
+      style={{
+        aspectRatio: '3 / 2',
+        width: '100%',
+        borderRadius: 'var(--mantine-radius-md)',
+        background:
+          'linear-gradient(135deg, var(--mantine-color-brand-5), var(--mantine-color-accent-6), var(--mantine-color-brand-6))',
+      }}
+    />
+  )
+}
 
 const meta = {
   title: 'Components/Card',
@@ -16,14 +33,23 @@ const meta = {
     layout: 'padded',
     docs: {
       description: {
-        component:
-          'Base card layout. Maps to the Figma **card-main** component (node `16728:26513`) — its three fetched variants (`Align=Vertical/Padding=True`, `Align=Horizontal/Padding=True`, `Align=Vertical/Padding=False`) share one content structure (image, header, up to two main-content slots, bottom content), modeled here as props rather than a fixed layout. `padding={false}` drops the card\'s own glass surface for embedding inside another container. The "Special Cards" stories below compose this same component to match the examples shown alongside card-main in Figma.',
+        component: [
+          'Base card layout, mapped to the Figma **card-main** component (node `16728:26513`).',
+          '',
+          'Its slots — image, top content, header, two main-content slots, bottom content — and its',
+          '`orientation` axis are props here. The glass surface comes from `variant="glass"`, which is',
+          'defined once in the theme and shared with `IconCard`, `Form` and the `Tabs` bar; pass',
+          '`variant={undefined}` for the Figma "Padding=False" case where the card sits inside a',
+          'surface that already provides its own chrome.',
+          '',
+          'The "Special Cards" stories below are all this same component with different slot content.',
+        ].join('\n'),
       },
     },
   },
   argTypes: {
-    align: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
-    padding: { control: 'boolean' },
+    orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
+    variant: { control: 'inline-radio', options: ['glass', undefined] },
     icon: { control: false },
     image: { control: false },
     topContent: { control: false },
@@ -32,15 +58,15 @@ const meta = {
     bottomContent: { control: false },
   },
   args: {
-    align: 'vertical',
-    padding: true,
+    orientation: 'vertical',
+    variant: 'glass',
     title: 'Card Title',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    icon: <GlassIcon src={iconDam} label="Data" />,
+    icon: <GlassIcon src={iconDam} />,
   },
   decorators: [
     (Story) => (
-      <div className="w-[400px] max-w-full">
+      <div style={{ width: 400, maxWidth: '100%' }}>
         <Story />
       </div>
     ),
@@ -57,54 +83,50 @@ export const WithImage: Story = {
 }
 
 export const Horizontal: Story = {
-  args: { align: 'horizontal', image: <PlaceholderImage /> },
+  args: { orientation: 'horizontal', image: <PlaceholderImage /> },
   decorators: [
     (Story) => (
-      <div className="w-[700px] max-w-full">
+      <div style={{ width: 760, maxWidth: '100%' }}>
         <Story />
       </div>
     ),
   ],
 }
 
-export const NoPadding: Story = {
+export const WithoutSurface: Story = {
   name: 'Padding = False',
   parameters: {
     docs: {
       description: {
         story:
-          'With `padding={false}` the card renders bare content only — no border, background, shadow, or blur — for embedding inside a container that already provides its own surface, matching the Figma "Padding=False" variant.',
+          'Figma\'s "Padding=False" variant: bare content with no glass surface, for embedding inside a container that already has its own chrome.',
       },
     },
   },
-  args: { padding: false, image: <PlaceholderImage /> },
+  args: { variant: undefined, image: <PlaceholderImage /> },
 }
 
 export const WithoutIcon: Story = {
   args: { icon: undefined },
 }
 
-// --- Special Cards -----------------------------------------------------
-// The Figma file shows these as ready-made examples alongside card-main, each built by composing
-// the base Card with different slot content. They are not separate components — just Card.
+// --- Special Cards -------------------------------------------------------------------------
+// Shown alongside card-main in Figma as ready-made examples. Each is this same Card with
+// different slot content — they are not separate components.
 
 export const SpecialResource: Story = {
   name: 'Special Card / Resource',
   parameters: {
     docs: {
-      description: {
-        story: 'A resource/blog card: image with an overlaid category label, title only, no description.',
-      },
+      description: { story: 'Resource/blog card: image with an overlaid category label, title only.' },
     },
   },
   render: () => (
     <Card
       image={
-        <div className="relative size-full">
+        <div style={{ position: 'relative' }}>
           <PlaceholderImage />
-          <div className="absolute bottom-3 left-3">
-            <Label>Resource</Label>
-          </div>
+          <Badge style={{ position: 'absolute', left: 12, bottom: 12 }}>Resource</Badge>
         </div>
       }
       title="5 ways to modernize your customer portal"
@@ -115,16 +137,18 @@ export const SpecialResource: Story = {
 export const SpecialStatHighlight: Story = {
   name: 'Special Card / Stat Highlight',
   parameters: {
-    docs: {
-      description: { story: 'A single highlighted statistic used as the main content, no image.' },
-    },
+    docs: { description: { story: 'A single highlighted statistic as the main content.' } },
   },
   render: () => (
     <Card
-      icon={<GlassIcon src={iconAnalytics} label="Analytics" />}
+      icon={<GlassIcon src={iconAnalytics} />}
       title="Customer growth"
       description="Year over year, across all regions."
-      mainContent1={<p className="text-[40px] font-bold text-brand-primaryActive">+128%</p>}
+      mainContent1={
+        <Text fz={40} fw={700} c="brand.4">
+          +128%
+        </Text>
+      }
     />
   ),
 }
@@ -132,19 +156,17 @@ export const SpecialStatHighlight: Story = {
 export const SpecialCsStat: Story = {
   name: 'Special Card / CS-Stat',
   parameters: {
-    docs: {
-      description: { story: 'A customer-story card pairing two stats as the main content slots.' },
-    },
+    docs: { description: { story: 'Customer-story card pairing two stats.' } },
   },
   render: () => (
     <Card
       image={<PlaceholderImage />}
       title="Airbus"
       mainContent1={
-        <div className="flex w-full items-center gap-6">
+        <Group gap="lg" grow>
           <Stat value="60%" label="Faster releases" />
           <Stat value="3.2x" label="Developer output" />
-        </div>
+        </Group>
       }
     />
   ),
@@ -153,18 +175,20 @@ export const SpecialCsStat: Story = {
 export const SpecialCsQuote: Story = {
   name: 'Special Card / CS-Quote',
   parameters: {
-    docs: {
-      description: { story: 'A customer quote used as bottom content, beneath the header.' },
-    },
+    docs: { description: { story: 'A customer quote in the bottom-content slot.' } },
   },
   render: () => (
     <Card
-      icon={<GlassIcon src={iconTestimonies} label="Testimonies" />}
+      icon={<GlassIcon src={iconTestimonies} />}
       title="Enterprise Websites"
       bottomContent={
-        <blockquote className="w-full border-l-2 border-brand-primary pl-4 text-surfaces-textSecondary">
-          "This platform let us ship in weeks what used to take quarters."
-        </blockquote>
+        <Text
+          component="blockquote"
+          pl="md"
+          style={{ borderLeft: '2px solid var(--mantine-color-brand-6)' }}
+        >
+          “This platform let us ship in weeks what used to take quarters.”
+        </Text>
       }
     />
   ),
@@ -173,20 +197,19 @@ export const SpecialCsQuote: Story = {
 export const SpecialQuickLink: Story = {
   name: 'Special Card / Quick Link',
   parameters: {
-    docs: {
-      description: { story: 'A compact link-out card with a tag and an action button as bottom content.' },
-    },
+    docs: { description: { story: 'Compact link-out card with a tag and an action.' } },
   },
   render: () => (
     <Card
-      padding
-      icon={<GlassIcon src={iconDocumentation} label="Documentation" />}
+      icon={<GlassIcon src={iconDocumentation} />}
       title="Developer documentation"
-      topContent={<Tag size="small">Docs</Tag>}
+      topContent={<Badge size="sm">Docs</Badge>}
       bottomContent={
-        <Button variant="outline" size="small">
-          Read more
-        </Button>
+        <Group>
+          <Button variant="outline" size="sm">
+            Read more
+          </Button>
+        </Group>
       }
     />
   ),
@@ -197,13 +220,13 @@ export const SpecialIconLeft: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'The most compact card: icon, title, and description only — no image or main content — for feature-callout lists.',
+        story: 'The most compact card — icon, title and description only, for feature-callout lists.',
       },
     },
   },
   render: () => (
     <Card
-      icon={<GlassIcon src={iconVerification} label="Verification" />}
+      icon={<GlassIcon src={iconVerification} />}
       title="Single sign-on"
       description="Connect your identity provider once and every solution inherits it."
     />
@@ -212,20 +235,11 @@ export const SpecialIconLeft: Story = {
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex flex-1 flex-col gap-1">
-      <p className="text-[28px] font-bold text-surfaces-textPrimary">{value}</p>
-      <p className="text-[14px] text-surfaces-textSecondary">{label}</p>
-    </div>
+    <Stack gap={4}>
+      <Title order={3} size="h2" c="var(--sds-text-primary)">
+        {value}
+      </Title>
+      <Text size="sm">{label}</Text>
+    </Stack>
   )
-}
-
-/** Renders one of the library's exported "glass icon" assets (`src/assets/glass-icons/`) — the
- * illustrative icon set from Figma's `card-icon variable` component. Cards should always use one
- * of these rather than a hand-drawn placeholder. */
-function GlassIcon({ src, label }: { src: string; label: string }) {
-  return <img src={src} alt="" role="presentation" aria-label={label} className="size-full" />
-}
-
-function PlaceholderImage() {
-  return <div className="size-full bg-gradient-to-br from-brand-primaryHover via-brand-accent to-brand-primary" />
 }

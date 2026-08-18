@@ -1,46 +1,87 @@
-export * from './tokens'
+/**
+ * Solutions Design System — public entry point.
+ *
+ * The library is a Mantine theme plus a small set of compositions. Most "components" in the design
+ * system are Mantine primitives configured centrally in `src/theme/components.ts`, so they are
+ * re-exported here rather than wrapped: importing `Button` from this package gives you Mantine's
+ * Button already carrying the Figma styling, with Mantine's own props.
+ */
 
-export { Accordion } from './components/Accordion/Accordion'
-export type { AccordionItem, AccordionProps } from './components/Accordion/Accordion'
+// ---------------------------------------------------------------- theme --------------------
+export { SolutionsProvider, theme, cssVariablesResolver, tokens } from './theme'
+export type { SolutionsProviderProps } from './theme'
 
-export { Badge } from './components/Badge/Badge'
-export type { BadgeProps } from './components/Badge/Badge'
-
-export { Button } from './components/Button/Button'
-export type { ButtonColor, ButtonVariant, ButtonSize, ButtonProps } from './components/Button/Button'
-
+// ---------------------------------------------------------------- compositions -------------
+// Components with structure of their own, built on Mantine primitives.
 export { Card } from './components/Card/Card'
-export type { CardAlign, CardProps } from './components/Card/Card'
-
-export { Checkbox } from './components/Checkbox/Checkbox'
-export type { CheckboxSize, CheckboxProps } from './components/Checkbox/Checkbox'
-
-export { Form } from './components/Form/Form'
-export type { FormProps } from './components/Form/Form'
+export type { CardProps } from './components/Card/Card'
 
 export { IconCard } from './components/IconCard/IconCard'
 export type { IconCardProps } from './components/IconCard/IconCard'
 
-export { Input } from './components/Input/Input'
-export type { InputSize, InputProps } from './components/Input/Input'
-
-export { Label } from './components/Label/Label'
-export type { LabelProps } from './components/Label/Label'
-
-export { Pagination } from './components/Pagination/Pagination'
-export type { PaginationProps } from './components/Pagination/Pagination'
-
-export { Radio } from './components/Radio/Radio'
-export type { RadioSize, RadioProps } from './components/Radio/Radio'
+export { Form } from './components/Form/Form'
+export type { FormProps } from './components/Form/Form'
 
 export { Search } from './components/Search/Search'
-export type { SearchSize, SearchProps } from './components/Search/Search'
+export type { SearchProps } from './components/Search/Search'
 
 export { TableOfContents } from './components/TableOfContents/TableOfContents'
-export type { TableOfContentsEntry, TableOfContentsProps } from './components/TableOfContents/TableOfContents'
+export type {
+  TableOfContentsEntry,
+  TableOfContentsProps,
+} from './components/TableOfContents/TableOfContents'
 
-export { Tabs } from './components/Tabs/Tabs'
-export type { TabsSize, TabItem, TabsProps } from './components/Tabs/Tabs'
+// ---------------------------------------------------------------- themed primitives --------
+/**
+ * Mantine components styled by this library's theme. They are re-exported so consumers have a
+ * single import surface, and so the design system controls which primitives are part of its
+ * supported API.
+ *
+ * Mapping from the pre-Mantine component set:
+ *   Input -> TextInput ·  Tag -> Badge ·  Label -> Chip
+ */
+export {
+  Accordion,
+  Anchor,
+  Badge,
+  Box,
+  Button,
+  Checkbox,
+  Chip,
+  Divider,
+  Group,
+  Image,
+  Pagination,
+  Paper,
+  Radio,
+  Select,
+  Stack,
+  Tabs,
+  Text,
+  TextInput,
+  Title,
+  useMantineColorScheme,
+  useMantineTheme,
+} from '@mantine/core'
 
-export { Tag } from './components/Tag/Tag'
-export type { TagVariant, TagSize, TagProps } from './components/Tag/Tag'
+export type {
+  AccordionProps,
+  AnchorProps,
+  BadgeProps,
+  BoxProps,
+  ButtonProps,
+  CheckboxProps,
+  ChipProps,
+  DividerProps,
+  GroupProps,
+  ImageProps,
+  PaginationProps,
+  PaperProps,
+  RadioProps,
+  SelectProps,
+  StackProps,
+  TabsProps,
+  TextProps,
+  TextInputProps,
+  TitleProps,
+} from '@mantine/core'
