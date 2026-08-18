@@ -7,7 +7,7 @@
   "types": "src/index.ts",
   "packageManager": "pnpm@11.22.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13"
   },
   "scripts": {
     "dev": "PATH=\"/opt/homebrew/bin:$PATH\" vite",
