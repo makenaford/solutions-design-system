@@ -62,7 +62,7 @@ function FieldShell({ label, required, leading, trailingChevron, children }: Fie
         {trailingChevron ? <Chevron /> : null}
       </div>
       <div
-        className="absolute left-[11px] top-[-11px] flex items-center whitespace-nowrap rounded-lg bg-neutral-0 px-1"
+        className="absolute left-[11px] top-[-11px] flex items-center whitespace-nowrap rounded-lg bg-surfaces-pageBg px-1"
       >
         <span className="text-surfaces-textPrimary opacity-80" style={toTextStyle(paragraph.extraSmallSemiBold)}>
           {label}

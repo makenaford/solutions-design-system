@@ -1,0 +1,89 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { brand, neutral, baseNeutral, status, surfaces, action } from '../tokens/colors'
+import { paragraph, heading, action as actionText, smallCaps, fontFamily } from '../tokens/typography'
+import { spacing, size, radius } from '../tokens/spacing'
+import { boxShadow } from '../tokens/shadows'
+import { ColorTable, TypeTable, ScaleTable, RadiusTable, ShadowTable } from './TokenTable'
+
+<Meta title="Overview/Design Tokens" />
+
+# Design tokens
+
+Every token below is extracted from the Figma **"Solutions Library- 2026"** library and wired into
+`tailwind.config.ts` as a theme extension. Import them as values from `solutions-design-system`, or
+use the Tailwind class shown in each table.
+
+```tsx
+import { brand, paragraph, spacing } from 'solutions-design-system'
+```
+
+## Color
+
+### Brand
+
+<ColorTable group="brand" tokens={brand} />
+
+### Neutral
+
+The primary neutral ramp, used for surfaces and borders on the dark page background.
+
+<ColorTable group="neutral" tokens={neutral} />
+
+### Base neutral
+
+<ColorTable group="base-neutral" tokens={baseNeutral} />
+
+### Status
+
+<ColorTable group="status" tokens={status} />
+
+### Surfaces
+
+Page and card backgrounds plus the text colors intended to sit on them.
+
+<ColorTable group="surfaces" tokens={surfaces} />
+
+### Action
+
+Interactive-element colors, split by state.
+
+<ColorTable group="action" tokens={action} />
+
+## Typography
+
+Four families are in use: `{fontFamily.sans}` for body and headings, `{fontFamily.label}` for
+labels and badges, `{fontFamily.ui}` for dense UI, and `{fontFamily.code}` for code.
+
+### Paragraph
+
+<TypeTable group="paragraph" tokens={paragraph} />
+
+### Heading
+
+<TypeTable group="heading" tokens={heading} />
+
+### Action
+
+<TypeTable group="actionText" tokens={actionText} />
+
+### Small caps
+
+<TypeTable group="smallCaps" tokens={smallCaps} />
+
+## Spacing
+
+### Numeric scale
+
+<ScaleTable tokens={spacing} classPrefix="p" />
+
+### Named sizes
+
+<ScaleTable tokens={size} classPrefix="gap" />
+
+### Border radius
+
+<RadiusTable tokens={radius} />
+
+## Elevation
+
+<ShadowTable tokens={boxShadow} />

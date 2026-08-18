@@ -8,7 +8,7 @@ const neutralScale = Object.fromEntries(Object.entries(neutral).map(([k, v]) => 
 const baseNeutralScale = Object.fromEntries(Object.entries(baseNeutral).map(([k, v]) => [k, v]))
 
 export default {
-  content: ['./index.html', './src/**/*.{ts,tsx}', './preview/**/*.{ts,tsx}'],
+  content: ['./index.html', './src/**/*.{ts,tsx,mdx}', './preview/**/*.{ts,tsx}', './.storybook/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {

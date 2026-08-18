@@ -7,7 +7,9 @@
   "types": "src/index.ts",
   "scripts": {
     "dev": "PATH=\"/opt/homebrew/bin:$PATH\" vite",
-    "build": "tsc --noEmit && vite build"
+    "build": "tsc --noEmit && vite build",
+    "storybook": "PATH=\"/opt/homebrew/bin:$PATH\" storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build"
   },
   "peerDependencies": {
     "react": "^18.2.0",

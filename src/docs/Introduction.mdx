@@ -1,0 +1,74 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Overview/Introduction" />
+
+# Solutions Design System
+
+A React + TypeScript + Tailwind component library generated from the Figma
+**"Solutions Library- 2026"** library (file key `KihJKyGA20stc2SSjAlxYU`).
+
+Every color, type scale, spacing step, and shadow in this library is extracted from that Figma
+file's variables and styles — so design and code share one source of truth rather than drifting
+apart. Components are additionally wired to their Figma nodes through
+[Code Connect](?path=/docs/overview-figma-code-connect--docs), which makes Figma's Dev Mode inspect
+panel show the real React snippet instead of generated CSS.
+
+## Install
+
+```bash
+npm install
+```
+
+## Use
+
+```tsx
+import { Button, Input, Badge } from 'solutions-design-system'
+import 'solutions-design-system/dist/style.css'
+
+function Example() {
+  return (
+    <div>
+      <Badge>New</Badge>
+      <Input label="Email" placeholder="you@company.com" />
+      <Button color="primary" variant="solid" size="medium">
+        Continue
+      </Button>
+    </div>
+  )
+}
+```
+
+## What's in here
+
+- **[Design tokens](?path=/docs/overview-design-tokens--docs)** — colors, typography, spacing, and
+  shadows, with the Tailwind class for each.
+- **Components** — 14 components, each with a props table and live controls. Use the **Playground**
+  story on any component to change props and copy the resulting code.
+
+## How props map to Figma
+
+Figma variant axes become props, with one deliberate exception: the `State` axis
+(Hover / Focus / Pressed) is implemented with CSS pseudo-classes instead of props, because those
+states belong to the browser rather than to your application. `Disabled` uses the native HTML
+attribute. Where a state *is* application-driven — `Label`'s `selected` and `dragged`, for
+instance — it stays a real prop.
+
+## Components with open design questions
+
+A handful of components were generated from an ambiguous or mismatched Figma node. They work, but
+they are worth confirming against the source file before you treat them as final:
+
+| Component | What to confirm |
+| --- | --- |
+| `Pagination` | No assembled pagination bar existed in Figma; rebuilt from the library's link and arrow styles. |
+| `Search` | No standalone Search input was reachable; built from the search icon plus Input field chrome. |
+| `Input` | The handed-off node resolved to a Dropdown; built from the actual Input component set instead. |
+| `Label` | The node's reusable component is named "Chip". A separate "Label CTA" component may have been the intended target. |
+| `Button` | The handed-off node was a single instance, not the component set; built from the real set found elsewhere. |
+| `IconCard` | Only the vertical desktop variant was inspectable; the horizontal layout is inferred, not traced. |
+
+## Contributing
+
+Add the component folder under `src/components/`, export it from `src/index.ts`, and write a
+`*.stories.tsx` file beside it. Storybook picks it up automatically, and the docs page on this site
+regenerates on the next push to `main`.

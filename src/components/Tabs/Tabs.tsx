@@ -101,7 +101,14 @@ export function Tabs({ tabs, activeTab, defaultActiveTab, onTabChange, size = 'd
         const panelId = `${baseId}-tabpanel-${tab.id}`
         const isActive = tab.id === activeId
         return (
-          <div key={tab.id} role="tabpanel" id={panelId} aria-labelledby={tabId} hidden={!isActive}>
+          <div
+            key={tab.id}
+            role="tabpanel"
+            id={panelId}
+            aria-labelledby={tabId}
+            hidden={!isActive}
+            className="text-surfaces-textSecondary"
+          >
             {isActive && tab.panel}
           </div>
         )
