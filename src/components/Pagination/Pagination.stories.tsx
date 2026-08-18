@@ -20,25 +20,27 @@ const meta = {
     siblingCount: { control: { type: 'number', min: 0, max: 3 } },
     onPageChange: { control: false },
   },
-  args: { page: 4, totalPages: 12, siblingCount: 1 },
+  args: { page: 4, totalPages: 12, siblingCount: 1, onPageChange: () => {} },
 } satisfies Meta<typeof Pagination>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
+const renderStateful: Story['render'] = (args) => {
+  const [page, setPage] = useState(args.page)
+  return <Pagination {...args} page={page} onPageChange={setPage} />
+}
+
 export const Playground: Story = {
-  render: (args) => {
-    const [page, setPage] = useState(args.page)
-    return <Pagination {...args} page={page} onPageChange={setPage} />
-  },
+  render: renderStateful,
 }
 
 export const FewPages: Story = {
-  ...Playground,
+  render: renderStateful,
   args: { page: 2, totalPages: 4 },
 }
 
 export const ManyPages: Story = {
-  ...Playground,
+  render: renderStateful,
   args: { page: 25, totalPages: 60, siblingCount: 2 },
 }
