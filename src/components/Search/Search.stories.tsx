@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Stack } from '@mantine/core'
 import { Search } from './Search'
 
 const meta = {
@@ -7,6 +8,7 @@ const meta = {
   component: Search,
   parameters: {
     layout: 'centered',
+    frame: { width: 360 },
     docs: {
       description: {
         component:
@@ -15,13 +17,6 @@ const meta = {
     },
   },
   args: { placeholder: 'Search', label: undefined },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 360 }}>
-        <Story />
-      </div>
-    ),
-  ],
 } satisfies Meta<typeof Search>
 
 export default meta
@@ -54,11 +49,11 @@ export const Clearable: Story = {
 
 export const Sizes: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <Stack gap="md">
       <Search {...args} size="sm" placeholder="Small" />
       <Search {...args} size="md" placeholder="Medium" />
       <Search {...args} size="lg" placeholder="Large" />
-    </div>
+    </Stack>
   ),
 }
 

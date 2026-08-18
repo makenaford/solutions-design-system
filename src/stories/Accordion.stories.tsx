@@ -27,6 +27,7 @@ const meta = {
   component: Accordion,
   parameters: {
     layout: 'padded',
+    frame: { width: 640 },
     docs: {
       description: {
         component:
@@ -35,13 +36,6 @@ const meta = {
     },
   },
   args: { defaultValue: 'what' },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 640, maxWidth: '100%' }}>
-        <Story />
-      </div>
-    ),
-  ],
 } satisfies Meta<typeof Accordion>
 
 export default meta

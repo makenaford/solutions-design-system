@@ -5,6 +5,7 @@ const meta = {
   title: 'Components/Text Input',
   component: TextInput,
   parameters: {
+    frame: { width: 360 },
     docs: {
       description: {
         component:
@@ -13,13 +14,6 @@ const meta = {
     },
   },
   args: { label: 'Work email', placeholder: 'you@company.com' },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 360 }}>
-        <Story />
-      </div>
-    ),
-  ],
 } satisfies Meta<typeof TextInput>
 
 export default meta

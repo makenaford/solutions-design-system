@@ -1,0 +1,19 @@
+/*
+ * Styling for Storybook example content only — never shipped as part of the library.
+ *
+ * Only things with no Mantine top-level prop equivalent belong here. Everything else in a story
+ * should use props (`w`, `maw`, `pos`, `bd`, `bg`, …), and anything about story *layout* belongs
+ * in `.storybook/StoryFrame.tsx` so it applies everywhere at once.
+ */
+
+/* `bg` takes a colour, not a gradient, so the placeholder fill has no prop equivalent. */
+.placeholderImage {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+    135deg,
+    var(--mantine-color-brand-5),
+    var(--mantine-color-accent-6),
+    var(--mantine-color-brand-6)
+  );
+}

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Card, Group, Stack, Text, Title } from '@mantine/core'
+import { Card, Center, Flex, Stack, Text, Title } from '@mantine/core'
 import type { CardProps } from '@mantine/core'
 
 export interface IconCardProps extends Omit<CardProps, 'title' | 'children'> {
@@ -42,17 +42,12 @@ export function IconCard({
 
   return (
     <Card variant={variant} maw={size === 'desktop' ? 600 : undefined} w="100%" data-interactive {...props}>
-      <Group
-        gap="sm"
-        align="center"
-        wrap="nowrap"
-        style={{ flexDirection: isHorizontal ? 'row' : 'column' }}
-      >
-        <Group w={48} h={48} justify="center" align="center" style={{ flexShrink: 0 }}>
+      <Flex direction={isHorizontal ? 'row' : 'column'} gap="sm" align="center" wrap="nowrap">
+        <Center w={48} h={48} flex="0 0 auto">
           {icon}
-        </Group>
+        </Center>
         {text}
-      </Group>
+      </Flex>
     </Card>
   )
 }

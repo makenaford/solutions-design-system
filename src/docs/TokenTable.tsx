@@ -10,17 +10,7 @@ import {
 } from '../theme/tokens'
 
 function Swatch({ value }: { value: string }) {
-  return (
-    <Box
-      w={36}
-      h={24}
-      style={{
-        borderRadius: 'var(--mantine-radius-sm)',
-        border: '1px solid var(--sds-glass-line-01)',
-        background: value,
-      }}
-    />
-  )
+  return <Box w={36} h={24} bdrs="sm" bd="1px solid var(--sds-glass-line-01)" bg={value} />
 }
 
 /** Colour ramps registered as Mantine colours, shown with the index used to reference them. */

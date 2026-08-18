@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react-vite'
 import { MantineProvider } from '@mantine/core'
 import { cssVariablesResolver } from '../src/theme/cssVariables'
 import { theme } from '../src/theme/theme'
+import { StoryFrame, type StoryFrameOptions } from './StoryFrame'
 
 import '@mantine/core/styles.css'
 
@@ -37,6 +38,8 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const colorScheme = context.globals.colorScheme === 'light' ? 'light' : 'dark'
+      const frame = (context.parameters.frame ?? {}) as StoryFrameOptions
+
       return (
         // `forceColorScheme` lets the toolbar drive the scheme directly, rather than Mantine
         // restoring a previously stored preference between stories.
@@ -45,16 +48,9 @@ const preview: Preview = {
           cssVariablesResolver={cssVariablesResolver}
           forceColorScheme={colorScheme}
         >
-          {/* Paints the story canvas with the themed page background so contrast is realistic. */}
-          <div
-            style={{
-              background: 'var(--mantine-color-body)',
-              padding: 'var(--mantine-spacing-xl)',
-              minHeight: '100vh',
-            }}
-          >
+          <StoryFrame {...frame}>
             <Story />
-          </div>
+          </StoryFrame>
         </MantineProvider>
       )
     },

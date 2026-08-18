@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Badge, Button, Group, Stack, Text, Title } from '@mantine/core'
+import { AspectRatio, Badge, Blockquote, Box, Group, Stack, Text, Title } from '@mantine/core'
+import { Button } from '../Button/Button'
 import { Card } from './Card'
+import classes from '../../stories/stories.module.css'
 import iconDam from '../../assets/glass-icons/Data/DAM.svg'
 import iconAnalytics from '../../assets/glass-icons/Performance/Analytics.svg'
 import iconTestimonies from '../../assets/glass-icons/Customer Support/Testimonies.svg'
@@ -12,17 +14,16 @@ function GlassIcon({ src }: { src: string }) {
   return <img src={src} alt="" width={48} height={48} />
 }
 
+/**
+ * Stand-in for a card image. The gradient is the one thing here without a top-level prop
+ * equivalent (`bg` takes a colour, not a gradient), so it lives in the stories' CSS module —
+ * defined once and shared by every story that needs a placeholder.
+ */
 function PlaceholderImage() {
   return (
-    <div
-      style={{
-        aspectRatio: '3 / 2',
-        width: '100%',
-        borderRadius: 'var(--mantine-radius-md)',
-        background:
-          'linear-gradient(135deg, var(--mantine-color-brand-5), var(--mantine-color-accent-6), var(--mantine-color-brand-6))',
-      }}
-    />
+    <AspectRatio ratio={3 / 2}>
+      <Box bdrs="md" className={classes.placeholderImage} />
+    </AspectRatio>
   )
 }
 
@@ -31,6 +32,8 @@ const meta = {
   component: Card,
   parameters: {
     layout: 'padded',
+    // Width comes from the shared StoryFrame rather than a wrapper div in each story.
+    frame: { width: 400 },
     docs: {
       description: {
         component: [
@@ -64,13 +67,6 @@ const meta = {
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     icon: <GlassIcon src={iconDam} />,
   },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 400, maxWidth: '100%' }}>
-        <Story />
-      </div>
-    ),
-  ],
 } satisfies Meta<typeof Card>
 
 export default meta
@@ -83,14 +79,8 @@ export const WithImage: Story = {
 }
 
 export const Horizontal: Story = {
+  parameters: { frame: { width: 760 } },
   args: { orientation: 'horizontal', image: <PlaceholderImage /> },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 760, maxWidth: '100%' }}>
-        <Story />
-      </div>
-    ),
-  ],
 }
 
 export const WithoutSurface: Story = {
@@ -124,10 +114,12 @@ export const SpecialResource: Story = {
   render: () => (
     <Card
       image={
-        <div style={{ position: 'relative' }}>
+        <Box pos="relative">
           <PlaceholderImage />
-          <Badge style={{ position: 'absolute', left: 12, bottom: 12 }}>Resource</Badge>
-        </div>
+          <Badge pos="absolute" left={12} bottom={12}>
+            Resource
+          </Badge>
+        </Box>
       }
       title="5 ways to modernize your customer portal"
     />
@@ -182,13 +174,9 @@ export const SpecialCsQuote: Story = {
       icon={<GlassIcon src={iconTestimonies} />}
       title="Enterprise Websites"
       bottomContent={
-        <Text
-          component="blockquote"
-          pl="md"
-          style={{ borderLeft: '2px solid var(--mantine-color-brand-6)' }}
-        >
+        <Blockquote color="brand" p="md">
           “This platform let us ship in weeks what used to take quarters.”
-        </Text>
+        </Blockquote>
       }
     />
   ),

@@ -11,6 +11,11 @@
 export { SolutionsProvider, theme, cssVariablesResolver, tokens } from './theme'
 export type { SolutionsProviderProps } from './theme'
 
+// ---------------------------------------------------------------- wrappers -----------------
+// Thin wrappers over Mantine primitives, kept so the design system owns the import surface.
+export { Button } from './components/Button/Button'
+export type { ButtonProps } from './components/Button/Button'
+
 // ---------------------------------------------------------------- compositions -------------
 // Components with structure of their own, built on Mantine primitives.
 export { Card } from './components/Card/Card'
@@ -45,7 +50,6 @@ export {
   Anchor,
   Badge,
   Box,
-  Button,
   Checkbox,
   Chip,
   Divider,
@@ -69,7 +73,6 @@ export type {
   AnchorProps,
   BadgeProps,
   BoxProps,
-  ButtonProps,
   CheckboxProps,
   ChipProps,
   DividerProps,

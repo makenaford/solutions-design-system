@@ -86,12 +86,17 @@
   );
 }
 
-.button:not(:disabled):not([data-disabled]):hover {
+/*
+ * Hover-lift / press feedback, split into its own class so the theme can withhold it from buttons
+ * that shouldn't respond — disabled and loading — via the functional `classNames` in
+ * `./components.ts`, rather than trying to express "not loading" in a selector.
+ */
+.buttonInteractive:hover {
   transform: translateY(-1px);
   box-shadow: var(--mantine-shadow-xl);
 }
 
-.button:not(:disabled):not([data-disabled]):active {
+.buttonInteractive:active {
   transform: translateY(0) scale(0.98);
   /* Figma "buttonPressedInner" */
   box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.25);
@@ -106,11 +111,24 @@
   transition: transform var(--sds-motion-base) var(--sds-motion-ease);
 }
 
-.button:hover .buttonSection:first-child {
+/*
+ * Figma's per-size icon gap (`Small Button Spacing` 4 / `Large Button Spacing` 8). Mantine hardcodes
+ * this margin to `--mantine-spacing-xs`, so it is replaced with the size-aware variable that the
+ * theme's `vars` function sets on the root.
+ */
+.button .buttonSection:first-child {
+  margin-inline-end: var(--sds-button-gap);
+}
+
+.button .buttonSection:last-child {
+  margin-inline-start: var(--sds-button-gap);
+}
+
+.buttonInteractive:hover .buttonSection:first-child {
   transform: translateX(-2px);
 }
 
-.button:hover .buttonSection:last-child {
+.buttonInteractive:hover .buttonSection:last-child {
   transform: translateX(2px);
 }
 

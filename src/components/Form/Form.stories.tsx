@@ -6,6 +6,7 @@ const meta = {
   component: Form,
   parameters: {
     layout: 'padded',
+    frame: { width: 600 },
     docs: {
       description: {
         component:
@@ -18,13 +19,6 @@ const meta = {
     description: 'Tell us where to send it and we will follow up within one business day.',
     submitLabel: 'Download',
   },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 600, maxWidth: '100%' }}>
-        <Story />
-      </div>
-    ),
-  ],
 } satisfies Meta<typeof Form>
 
 export default meta

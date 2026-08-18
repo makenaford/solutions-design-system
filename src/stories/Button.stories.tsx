@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Button, Group, Stack } from '@mantine/core'
+import { Group, Stack } from '@mantine/core'
+import { Button } from '../components/Button/Button'
 
 const meta = {
   title: 'Components/Button',
@@ -8,7 +9,11 @@ const meta = {
     docs: {
       description: {
         component: [
-          "Mantine's `Button`, styled by this library's theme from the Figma Button component set.",
+          "A thin wrapper over Mantine's `Button`, styled by this library's theme from the Figma Button component set. It adds no props of its own — the styling lives in the theme.",
+          '',
+          'Sizes are driven from the measured Figma frames (Small 40px, Medium 48px, Large 56px) via',
+          "the theme's `vars` function, together with the `Action/Button/*` type ramp and the",
+          '`Small`/`Large Button Spacing` icon gaps.',
           '',
           'The Figma axes map onto Mantine props rather than bespoke ones:',
           '',
@@ -122,14 +127,8 @@ export const States: Story = {
 }
 
 export const FullWidth: Story = {
+  parameters: { frame: { width: 360 } },
   args: { fullWidth: true },
-  decorators: [
-    (Story) => (
-      <div style={{ width: 360 }}>
-        <Story />
-      </div>
-    ),
-  ],
 }
 
 function Arrow({ direction }: { direction: 'left' | 'right' }) {

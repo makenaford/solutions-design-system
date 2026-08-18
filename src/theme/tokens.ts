@@ -210,6 +210,25 @@ export const headingSizes = {
   h6: { fontSize: '16px', lineHeight: '24px' },
 } as const
 
+/**
+ * Button geometry per Figma size variant.
+ *
+ * `height` is measured off the Figma Button component set (node `16123:189647`): Large 56, Medium
+ * 48, Small 40. `fontSize`/`lineHeight` come from the `Action/Button/*` type styles, and `gap` from
+ * the published `Large Button Spacing` (8) / `Small Button Spacing` (4) tokens.
+ *
+ * `paddingX` is the one derived value here — Figma's buttons hug their content, so the frame
+ * widths don't yield a padding directly. These are chosen to sit correctly with the measured
+ * heights.
+ */
+export const buttonSizes = {
+  sm: { height: '40px', fontSize: '14px', lineHeight: '20px', gap: '4px', paddingX: '16px' },
+  md: { height: '48px', fontSize: '18px', lineHeight: '24px', gap: '8px', paddingX: '20px' },
+  lg: { height: '56px', fontSize: '21px', lineHeight: '28px', gap: '8px', paddingX: '24px' },
+} as const
+
+export type ButtonSizeKey = keyof typeof buttonSizes
+
 /** Figma effects: `glass effect card`, `Shadow/Dropdown`, `focus shadow tab`. */
 export const effects = {
   /** `glass effect card` — BACKGROUND_BLUR 100 + DROP_SHADOW(Glass Card/shadow, 0 0, r6, s1). */
