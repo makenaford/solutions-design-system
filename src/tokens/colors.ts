@@ -42,15 +42,27 @@ export const status = {
   infoDarken2: '#0c66e4',
 } as const
 
+/**
+ * Theme-dependent surface tokens. Each resolves through a CSS custom property (defined for both
+ * themes in `src/theme.css`) instead of a literal value, so the same imported constant repaints
+ * live when the `.light`/`.dark` class on an ancestor changes — whether it's consumed via a
+ * Tailwind class (`bg-surfaces-pageBg`) or read directly in a JS inline style.
+ */
 export const surfaces = {
-  pageBg: '#070b13',
-  textPrimary: '#f0f1f5',
-  textSecondary: '#d1d6e0',
-  textTertiary: '#d1d6e0',
-  cardBgGrey: '#0f131b',
-  cardBgBlue: '#6399ff0d',
-  cardBgTranslucent: '#ffffff1a',
+  pageBg: 'var(--sds-page-bg)',
+  textPrimary: 'var(--sds-text-primary)',
+  textSecondary: 'var(--sds-text-secondary)',
+  textTertiary: 'var(--sds-text-tertiary)',
+  cardBgGrey: 'var(--sds-card-bg-grey)',
+  cardBgBlue: 'var(--sds-card-bg-blue)',
+  cardBgTranslucent: 'var(--sds-card-bg-translucent)',
   cardBgTransparent: '#ffffff00',
+  border: 'var(--sds-border)',
+  borderHover: 'var(--sds-border-hover)',
+  borderSubtle: 'var(--sds-border-subtle)',
+  divider: 'var(--sds-divider)',
+  dividerOpen: 'var(--sds-divider-open)',
+  overlayHover: 'var(--sds-overlay-hover)',
 } as const
 
 export const action = {
@@ -61,11 +73,11 @@ export const action = {
   secondaryText: '#0b5fff',
   neutralDefault: '#ffffff',
   neutralInverted: '#ffffff',
-  linkDefault: '#74a4ff',
-  linkHover: '#bbd2ff',
-  linkActive: '#8fb5ff',
-  linkVisited: '#c6bfff',
-  linkDisabled: '#74a4ff99',
+  linkDefault: 'var(--sds-link-default)',
+  linkHover: 'var(--sds-link-hover)',
+  linkActive: 'var(--sds-link-active)',
+  linkVisited: 'var(--sds-link-visited)',
+  linkDisabled: 'var(--sds-link-disabled)',
 } as const
 
 export const components = {
@@ -89,12 +101,13 @@ export const components = {
     bgLabel: '#1f2531',
   },
   glassCard: {
-    step01: '#ffffff0d',
-    step02: '#8c96a908',
+    step01: 'var(--sds-glass-step-01)',
+    step02: 'var(--sds-glass-step-02)',
+    tint: 'var(--sds-glass-tint)',
     shadow: '#adc9ff33',
   },
   glassLine: {
-    1: '#ffffff33',
+    1: 'var(--sds-glass-line-1)',
     2: '#ffffff1a',
   },
   glassTab: {

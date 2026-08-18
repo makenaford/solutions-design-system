@@ -69,9 +69,9 @@ export function Pagination({ page, totalPages, onPageChange, siblingCount = 1, c
         disabled={page <= 1}
         onClick={() => onPageChange(page - 1)}
         className={clsx(
-          'flex size-9 items-center justify-center rounded-default text-surfaces-textSecondary transition-colors',
-          'hover:text-action-linkHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary',
-          'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-surfaces-textSecondary'
+          'flex size-9 items-center justify-center rounded-default text-surfaces-textSecondary transition-[color,background-color] duration-150',
+          'hover:bg-surfaces-overlayHover hover:text-action-linkHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary',
+          'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-surfaces-textSecondary'
         )}
       >
         <ArrowIcon direction="left" />
@@ -91,11 +91,11 @@ export function Pagination({ page, totalPages, onPageChange, siblingCount = 1, c
                 aria-current={entry === page ? 'page' : undefined}
                 onClick={() => onPageChange(entry)}
                 className={clsx(
-                  'flex size-9 items-center justify-center rounded-default transition-colors',
+                  'flex size-9 items-center justify-center rounded-default transition-[color,background-color,transform] duration-150',
                   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary',
                   entry === page
                     ? 'bg-brand-primary text-action-neutralInverted'
-                    : 'text-action-linkDefault hover:text-action-linkHover'
+                    : 'text-action-linkDefault hover:bg-surfaces-overlayHover hover:text-action-linkHover active:scale-90'
                 )}
                 style={{
                   fontFamily: (entry === page ? actionText.linkMediumActive : actionText.linkMedium).fontFamily,
@@ -117,9 +117,9 @@ export function Pagination({ page, totalPages, onPageChange, siblingCount = 1, c
         disabled={page >= totalPages}
         onClick={() => onPageChange(page + 1)}
         className={clsx(
-          'flex size-9 items-center justify-center rounded-default text-surfaces-textSecondary transition-colors',
-          'hover:text-action-linkHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary',
-          'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-surfaces-textSecondary'
+          'flex size-9 items-center justify-center rounded-default text-surfaces-textSecondary transition-[color,background-color] duration-150',
+          'hover:bg-surfaces-overlayHover hover:text-action-linkHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary',
+          'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-surfaces-textSecondary'
         )}
       >
         <ArrowIcon direction="right" />

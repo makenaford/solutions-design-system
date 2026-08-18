@@ -5,6 +5,8 @@ export const boxShadow = {
   buttonPressedInner: 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
   glassCard: '0px 0px 6px 1px rgba(173, 201, 255, 0.2)',
   focusShadowTab: '-1px 1px 7px 2px rgba(31, 37, 49, 1)',
+  /** Soft lift shadow for the hover-elevate micro-interaction on cards and buttons. */
+  hoverLift: '0px 12px 24px -8px rgba(11, 95, 255, 0.25)',
 } as const
 
 export const backdropBlur = {

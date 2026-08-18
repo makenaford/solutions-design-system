@@ -1,0 +1,65 @@
+/*
+ * Theme-dependent design tokens as CSS custom properties. Dark is this library's native mode
+ * (it matches the source Figma library) and lives on the bare `:root`; the `.light` class
+ * overrides it. Toggle by adding/removing `.light` on any ancestor element (e.g. `<html>`).
+ */
+:root {
+  --sds-page-bg: #070b13;
+  --sds-text-primary: #f0f1f5;
+  --sds-text-secondary: #d1d6e0;
+  --sds-text-tertiary: #d1d6e0;
+  --sds-card-bg-grey: #0f131b;
+  --sds-card-bg-blue: #6399ff0d;
+  --sds-card-bg-translucent: #ffffff1a;
+  --sds-border: #505e73;
+  --sds-border-hover: #667085;
+  --sds-border-subtle: #212631;
+  --sds-divider: #313948;
+  --sds-divider-open: #31394880;
+  --sds-overlay-hover: rgba(255, 255, 255, 0.06);
+  --sds-link-default: #74a4ff;
+  --sds-link-hover: #bbd2ff;
+  --sds-link-active: #8fb5ff;
+  --sds-link-visited: #c6bfff;
+  --sds-link-disabled: #74a4ff99;
+  --sds-glass-step-01: #ffffff0d;
+  --sds-glass-step-02: #8c96a908;
+  --sds-glass-line-1: #ffffff33;
+  --sds-glass-tint: rgba(0, 0, 0, 0.2);
+}
+
+.light {
+  --sds-page-bg: #f6f8fc;
+  --sds-text-primary: #1f2531;
+  --sds-text-secondary: #4c5b73;
+  --sds-text-tertiary: #6b7688;
+  --sds-card-bg-grey: #ffffff;
+  --sds-card-bg-blue: #0b5fff0d;
+  --sds-card-bg-translucent: #0f131a0a;
+  --sds-border: #dde1e8;
+  --sds-border-hover: #b7bdc9;
+  --sds-border-subtle: #c7cdd8;
+  --sds-divider: #e2e5eb;
+  --sds-divider-open: #e2e5eb80;
+  --sds-overlay-hover: rgba(15, 20, 30, 0.05);
+  --sds-link-default: #0b5fff;
+  --sds-link-hover: #377cff;
+  --sds-link-active: #0347c9;
+  --sds-link-visited: #6d4fd1;
+  --sds-link-disabled: #0b5fff66;
+  --sds-glass-step-01: #0b5fff0d;
+  --sds-glass-step-02: #8c96a908;
+  --sds-glass-line-1: #00000014;
+  --sds-glass-tint: rgba(255, 255, 255, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

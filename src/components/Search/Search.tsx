@@ -60,11 +60,12 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(function Search(
           onChange?.(event)
         }}
         className={clsx(
-          'w-full rounded-lg border bg-transparent pl-9 text-surfaces-textPrimary outline-none transition-colors placeholder:text-surfaces-textSecondary [&::-webkit-search-cancel-button]:appearance-none',
+          'w-full rounded-lg border bg-transparent pl-9 text-surfaces-textPrimary outline-none placeholder:text-surfaces-textSecondary [&::-webkit-search-cancel-button]:appearance-none',
+          'transition-[border-color,box-shadow] duration-150',
           'py-4',
           onClear ? 'pr-9' : 'pr-5',
-          disabled ? 'cursor-not-allowed border-neutral-4 opacity-50' : 'border-neutral-4 hover:border-base-neutral-6',
-          'focus:border-action-primaryActive'
+          disabled ? 'cursor-not-allowed border-surfaces-border opacity-50' : 'border-surfaces-border hover:border-surfaces-borderHover',
+          'focus:border-action-primaryActive focus:ring-2 focus:ring-action-primaryActive/20'
         )}
         style={{
           fontFamily: textStyle.fontFamily,
@@ -80,7 +81,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(function Search(
           type="button"
           aria-label="Clear search"
           onClick={onClear}
-          className="absolute right-3 flex size-4 shrink-0 items-center justify-center rounded-full text-surfaces-textSecondary transition-colors hover:text-surfaces-textPrimary"
+          className="absolute right-3 flex size-4 shrink-0 items-center justify-center rounded-full text-surfaces-textSecondary transition-[color,transform] duration-150 hover:scale-110 hover:text-surfaces-textPrimary"
         >
           <svg viewBox="0 0 12 12" fill="none" aria-hidden="true" className="size-3">
             <path d="M1.5 1.5L10.5 10.5M10.5 1.5L1.5 10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />

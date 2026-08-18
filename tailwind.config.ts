@@ -30,6 +30,20 @@ export default {
       spacing: { ...spacing, ...size },
       borderRadius: radius,
       boxShadow,
+      keyframes: {
+        'accordion-in': {
+          from: { opacity: '0', transform: 'translateY(-4px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        'pop-in': {
+          from: { opacity: '0', transform: 'scale(0.7)' },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      animation: {
+        'accordion-in': 'accordion-in 180ms ease-out',
+        'pop-in': 'pop-in 150ms ease-out',
+      },
     },
   },
   plugins: [],

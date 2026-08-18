@@ -107,12 +107,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             onChange?.(event)
           }}
           className={clsx(
-            'w-full rounded-lg border bg-transparent text-surfaces-textPrimary outline-none transition-colors',
+            'w-full rounded-lg border bg-transparent text-surfaces-textPrimary outline-none',
+            'transition-[border-color,box-shadow] duration-150',
             isLarge ? 'px-4 py-4' : 'px-5 py-4',
             leftIcon && 'pl-9',
             rightIcon && 'pr-9',
-            disabled ? 'cursor-not-allowed border-neutral-4 opacity-50' : 'border-neutral-4 hover:border-base-neutral-6',
-            'focus:border-action-primaryActive'
+            disabled ? 'cursor-not-allowed border-surfaces-border opacity-50' : 'border-surfaces-border hover:border-surfaces-borderHover',
+            'focus:border-action-primaryActive focus:ring-2 focus:ring-action-primaryActive/20'
           )}
           style={{
             fontFamily: fieldTextStyle.fontFamily,

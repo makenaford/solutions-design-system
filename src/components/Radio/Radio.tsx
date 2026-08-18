@@ -57,19 +57,20 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
         <span
           aria-hidden="true"
           className={clsx(
-            'pointer-events-none relative flex items-center justify-center rounded-full border border-base-neutral-9 transition-colors',
+            'pointer-events-none relative flex items-center justify-center rounded-full border border-surfaces-borderSubtle transition-colors duration-150',
             outerSizeClass,
+            'group-hover:border-surfaces-borderHover',
             'group-has-[:checked]:border-transparent',
             'group-has-[:focus-visible]:ring-2 group-has-[:focus-visible]:ring-brand-lighten3 group-has-[:focus-visible]:ring-offset-1'
           )}
         >
           <span
-            className="absolute inset-0 rounded-full opacity-0 transition-opacity group-has-[:checked]:opacity-100"
+            className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-150 group-has-[:checked]:opacity-100"
             style={{ backgroundImage: 'linear-gradient(97deg, #377cff 50%, #0b5fff 100%)' }}
           />
           <span
             className={clsx(
-              'relative z-10 rounded-full bg-neutral-0 opacity-0 transition-opacity group-has-[:checked]:opacity-100',
+              'relative z-10 scale-50 rounded-full bg-neutral-0 opacity-0 transition-[opacity,transform] duration-150 ease-out group-has-[:checked]:scale-100 group-has-[:checked]:opacity-100',
               innerSizeClass
             )}
           />

@@ -91,26 +91,30 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
         <span
           aria-hidden="true"
           className={clsx(
-            'pointer-events-none relative flex items-center justify-center overflow-hidden rounded-sm border border-base-neutral-9 transition-colors',
+            'pointer-events-none relative flex items-center justify-center overflow-hidden rounded-sm border border-surfaces-borderSubtle transition-colors duration-150',
             boxSizeClass,
+            'group-hover:border-surfaces-borderHover',
             'group-has-[:checked]:border-transparent group-has-[:indeterminate]:border-transparent',
             'group-has-[:focus-visible]:ring-2 group-has-[:focus-visible]:ring-brand-lighten3 group-has-[:focus-visible]:ring-offset-1'
           )}
         >
           <span
-            className="absolute inset-0 opacity-0 transition-opacity group-has-[:checked]:opacity-100"
+            className="absolute inset-0 opacity-0 transition-opacity duration-150 group-has-[:checked]:opacity-100"
             style={{ backgroundImage: 'linear-gradient(250deg, #377cff 37%, #0b5fff 63%)' }}
           />
           <span
-            className="absolute inset-0 opacity-0 transition-opacity group-has-[:indeterminate]:opacity-100"
+            className="absolute inset-0 opacity-0 transition-opacity duration-150 group-has-[:indeterminate]:opacity-100"
             style={{ backgroundImage: 'linear-gradient(259deg, #0b5fff 10%, #377cff 100%)' }}
           />
 
           <span className={clsx('relative z-10 flex items-center justify-center text-neutral-0', iconWrapperSizeClass)}>
             <CheckIcon
-              className={clsx('size-full opacity-0 transition-opacity', 'group-has-[:checked]:opacity-100 group-has-[:indeterminate]:opacity-0')}
+              className={clsx(
+                'size-full scale-50 opacity-0 transition-[opacity,transform] duration-150 ease-out',
+                'group-has-[:checked]:scale-100 group-has-[:checked]:opacity-100 group-has-[:indeterminate]:opacity-0'
+              )}
             />
-            <DashIcon className="absolute inset-0 size-full opacity-0 transition-opacity group-has-[:indeterminate]:opacity-100" />
+            <DashIcon className="absolute inset-0 size-full scale-50 opacity-0 transition-[opacity,transform] duration-150 ease-out group-has-[:indeterminate]:scale-100 group-has-[:indeterminate]:opacity-100" />
           </span>
         </span>
       </span>

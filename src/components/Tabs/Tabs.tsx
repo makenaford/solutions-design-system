@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useId, useLayoutEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import clsx from 'clsx'
 import { action as actionText } from '../../tokens/typography'
@@ -38,6 +38,29 @@ export function Tabs({ tabs, activeTab, defaultActiveTab, onTabChange, size = 'd
   const baseId = useId()
   const isMobile = size === 'mobile'
 
+  const tablistRef = useRef<HTMLDivElement>(null)
+  const [indicator, setIndicator] = useState<{ left: number; width: number; top: number; height: number } | null>(null)
+
+  useLayoutEffect(() => {
+    const tablist = tablistRef.current
+    if (!tablist || !activeId) return
+    const activeButton = tablist.querySelector<HTMLElement>(`[data-tab-id="${activeId}"]`)
+    if (!activeButton) return
+
+    const update = () =>
+      setIndicator({
+        left: activeButton.offsetLeft,
+        width: activeButton.offsetWidth,
+        top: activeButton.offsetTop,
+        height: activeButton.offsetHeight,
+      })
+
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(tablist)
+    return () => observer.disconnect()
+  }, [activeId, isMobile, tabs.length])
+
   function selectTab(id: string) {
     if (!isControlled) setInternalActiveTab(id)
     onTabChange?.(id)
@@ -46,12 +69,24 @@ export function Tabs({ tabs, activeTab, defaultActiveTab, onTabChange, size = 'd
   return (
     <div className={clsx('flex flex-col gap-5', className)}>
       <div
+        ref={tablistRef}
         role="tablist"
         className={clsx(
-          'inline-flex items-center rounded-full border border-components-glassLine-1 bg-surfaces-cardBgTranslucent p-3',
+          'relative inline-flex items-center rounded-full border border-components-glassLine-1 bg-surfaces-cardBgTranslucent p-3',
           isMobile ? 'w-full flex-wrap gap-4' : 'w-fit gap-1'
         )}
       >
+        {indicator && (
+          <span
+            aria-hidden="true"
+            className="absolute rounded-full bg-brand-primary shadow-focusShadowTab transition-[transform,width,height] duration-300 ease-out"
+            style={{
+              width: indicator.width,
+              height: indicator.height,
+              transform: `translate(${indicator.left}px, ${indicator.top}px)`,
+            }}
+          />
+        )}
         {tabs.map((tab) => {
           const isActive = tab.id === activeId
           const textStyle = isActive ? actionText.linkMediumActive : actionText.linkMedium
@@ -64,16 +99,15 @@ export function Tabs({ tabs, activeTab, defaultActiveTab, onTabChange, size = 'd
               type="button"
               role="tab"
               id={tabId}
+              data-tab-id={tab.id}
               aria-selected={isActive}
               aria-controls={panelId}
               disabled={tab.disabled}
               onClick={() => selectTab(tab.id)}
               className={clsx(
-                'inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-full text-center transition-colors',
+                'relative z-10 inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-full text-center transition-colors duration-150',
                 isMobile ? 'p-4' : 'px-9 py-4',
-                isActive
-                  ? 'bg-brand-primary text-action-neutralInverted shadow-focusShadowTab'
-                  : 'text-surfaces-textSecondary hover:text-action-linkHover',
+                isActive ? 'text-action-neutralInverted' : 'text-surfaces-textSecondary hover:text-action-linkHover',
                 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary',
                 tab.disabled && 'cursor-not-allowed opacity-50'
               )}
@@ -86,7 +120,7 @@ export function Tabs({ tabs, activeTab, defaultActiveTab, onTabChange, size = 'd
               }}
             >
               {tab.icon && (
-                <span className={clsx('shrink-0', !isActive && 'opacity-50')} aria-hidden="true">
+                <span className={clsx('shrink-0 transition-opacity duration-150', !isActive && 'opacity-50')} aria-hidden="true">
                   {tab.icon}
                 </span>
               )}

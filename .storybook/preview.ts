@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
 import { surfaces } from '../src/tokens/colors'
+import { withTheme } from './withTheme'
 import '../src/index.css'
 
 const preview: Preview = {
@@ -23,9 +24,25 @@ const preview: Preview = {
       },
     },
   },
+  globalTypes: {
+    theme: {
+      name: 'Theme',
+      description: 'Light or dark theme',
+      toolbar: {
+        icon: 'circlehollow',
+        items: [
+          { value: 'dark', icon: 'circle', title: 'Dark' },
+          { value: 'light', icon: 'circlehollow', title: 'Light' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
   initialGlobals: {
     backgrounds: { value: 'page' },
+    theme: 'dark',
   },
+  decorators: [withTheme],
   tags: ['autodocs'],
 }
 

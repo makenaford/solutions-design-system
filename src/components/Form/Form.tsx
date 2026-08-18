@@ -55,8 +55,8 @@ interface FieldShellProps {
 
 function FieldShell({ label, required, leading, trailingChevron, children }: FieldShellProps) {
   return (
-    <div className="relative flex w-full flex-1 flex-col items-start gap-1">
-      <div className="flex w-full items-center gap-4 rounded-lg border border-neutral-4 px-5 py-4">
+    <div className="group relative flex w-full flex-1 flex-col items-start gap-1">
+      <div className="flex w-full items-center gap-4 rounded-lg border border-surfaces-border px-5 py-4 transition-colors duration-150 hover:border-surfaces-borderHover focus-within:border-action-primaryActive">
         {leading}
         {children}
         {trailingChevron ? <Chevron /> : null}
@@ -93,7 +93,7 @@ function TextField({ label, name, placeholder, required, type = 'text' }: TextFi
         name={name}
         placeholder={placeholder}
         required={required}
-        className="w-full flex-1 bg-transparent text-neutral-10 outline-none placeholder:text-neutral-10"
+        className="w-full flex-1 bg-transparent text-surfaces-textPrimary outline-none placeholder:text-surfaces-textTertiary"
         style={toTextStyle(paragraph.default)}
       />
     </FieldShell>
@@ -116,7 +116,7 @@ function SelectField({ label, name, placeholder, options, required, leading }: S
         name={name}
         defaultValue=""
         required={required}
-        className="w-full flex-1 appearance-none bg-transparent text-neutral-10 opacity-80 outline-none"
+        className="w-full flex-1 appearance-none bg-transparent text-surfaces-textPrimary opacity-80 outline-none"
         style={toTextStyle(paragraph.default)}
       >
         <option value="" disabled>
@@ -158,7 +158,7 @@ export const Form = ({
         className,
       )}
       style={{
-        backgroundColor: 'rgba(0,0,0,0.2)',
+        backgroundColor: components.glassCard.tint,
         backgroundImage: `linear-gradient(60deg, ${components.glassCard.step01} 43%, ${components.glassCard.step02} 135%)`,
       }}
     >
@@ -252,7 +252,7 @@ export const Form = ({
         <div className="flex w-full items-center gap-large">
           <button
             type="submit"
-            className="flex flex-1 items-center justify-center gap-3 rounded-lg px-5 py-4 text-action-neutralInverted"
+            className="flex flex-1 items-center justify-center gap-3 rounded-lg px-5 py-4 text-action-neutralInverted transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-px hover:shadow-hoverLift active:translate-y-0 active:scale-[0.98] active:shadow-buttonPressedInner focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primaryDefault focus-visible:ring-offset-2"
             style={{
               backgroundImage: `linear-gradient(211deg, ${actionColor.primaryHover} 37%, ${actionColor.primaryDefault} 63%)`,
               ...toTextStyle(actionType.buttonMedium),

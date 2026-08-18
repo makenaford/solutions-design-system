@@ -46,7 +46,10 @@ export function TableOfContents({ items, activeId, onItemClick, heading = 'Outli
             <li key={item.id} className="flex w-full items-stretch gap-4">
               <span
                 aria-hidden="true"
-                className={clsx('min-h-[56px] shrink-0 self-stretch rounded-md', isActive ? 'w-[3px] bg-brand-primary' : 'w-px bg-neutral-9')}
+                className={clsx(
+                  'min-h-[56px] shrink-0 self-stretch rounded-md transition-[width,background-color] duration-200 ease-out',
+                  isActive ? 'w-[3px] bg-brand-primary' : 'w-px bg-surfaces-divider'
+                )}
               />
               <a
                 href={`#${item.id}`}
@@ -61,8 +64,10 @@ export function TableOfContents({ items, activeId, onItemClick, heading = 'Outli
                   marginLeft: level > 1 ? `${(level - 1) * 12}px` : undefined,
                 }}
                 className={clsx(
-                  'flex-1 py-4 transition-colors',
-                  isActive ? 'text-surfaces-textPrimary' : 'text-surfaces-textSecondary hover:text-surfaces-textPrimary'
+                  'flex-1 rounded-default py-4 transition-[color,background-color] duration-150',
+                  isActive
+                    ? 'text-surfaces-textPrimary'
+                    : 'text-surfaces-textSecondary hover:bg-surfaces-overlayHover hover:text-surfaces-textPrimary'
                 )}
               >
                 {item.label}

@@ -34,9 +34,9 @@ export const Label = React.forwardRef<HTMLButtonElement, LabelProps>(function La
   const borderClasses = selected
     ? 'border-transparent'
     : disabled
-      ? 'border-action-primaryInverted'
+      ? 'border-surfaces-borderHover'
       : dragged
-        ? 'border-action-primaryInverted shadow-elevationTight1'
+        ? 'border-surfaces-borderHover shadow-elevationTight1'
         : 'border-components-buttonOutline-lineStep01'
 
   return (
@@ -49,7 +49,9 @@ export const Label = React.forwardRef<HTMLButtonElement, LabelProps>(function La
         'group relative inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-lg',
         'px-medium py-[6px]',
         'bg-surfaces-cardBgBlue font-sans text-[14px] font-semibold leading-[18px] text-surfaces-textPrimary',
-        'border',
+        'border transition-[border-color,transform] duration-150 ease-out',
+        !disabled && !selected && 'hover:border-brand-lighten1',
+        !disabled && 'active:scale-95',
         borderClasses,
         'focus-visible:outline-none',
         'disabled:pointer-events-none disabled:opacity-40',

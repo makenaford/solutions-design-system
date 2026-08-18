@@ -40,7 +40,7 @@ const radiusClasses: Record<ButtonSize, string> = {
   small: 'rounded-md',
 }
 
-const iconSlotClasses = 'flex size-[20px] shrink-0 items-center justify-center'
+const iconSlotClasses = 'flex size-[20px] shrink-0 items-center justify-center transition-transform duration-200 ease-out'
 
 /**
  * Button — Figma node 22664:20974 ("Button" component set).
@@ -65,11 +65,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       type={type ?? 'button'}
       disabled={disabled}
       className={clsx(
-        'inline-flex items-center justify-center whitespace-nowrap font-sans font-semibold transition-colors',
+        'group inline-flex items-center justify-center whitespace-nowrap font-sans font-semibold',
+        'transition-[background-image,border-color,box-shadow,transform,opacity] duration-200 ease-out',
+        'hover:-translate-y-px active:translate-y-0 active:scale-[0.98]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-primaryDefault focus-visible:ring-offset-2',
-        'disabled:pointer-events-none disabled:opacity-50',
+        'disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 disabled:active:scale-100',
         sizeClasses[size],
-        isPill ? 'rounded-full shadow-elevationTight4' : radiusClasses[size],
+        isPill ? 'rounded-full shadow-elevationTight4 hover:shadow-hoverLift' : radiusClasses[size],
+        !isPill && !isOutline && 'hover:shadow-hoverLift',
         isOutline
           ? clsx(
               'border border-components-buttonOutline-lineStep01 bg-components-buttonOutline-bgStep01',
@@ -85,9 +88,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       style={{ ...backgroundStyle, ...style }}
       {...props}
     >
-      {iconLeft && <span className={iconSlotClasses}>{iconLeft}</span>}
+      {iconLeft && <span className={clsx(iconSlotClasses, 'group-hover:-translate-x-0.5')}>{iconLeft}</span>}
       {children}
-      {iconRight && <span className={iconSlotClasses}>{iconRight}</span>}
+      {iconRight && <span className={clsx(iconSlotClasses, 'group-hover:translate-x-0.5')}>{iconRight}</span>}
     </button>
   )
 })

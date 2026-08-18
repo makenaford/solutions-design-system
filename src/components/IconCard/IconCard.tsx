@@ -49,7 +49,9 @@ export const IconCard = ({
   return (
     <div
       className={clsx(
-        'flex flex-col items-start gap-5 rounded-lg border border-components-glassLine-1 bg-surfaces-cardBgBlue p-[20px] shadow-glassCard backdrop-blur-[50px]',
+        'group flex flex-col items-start gap-5 rounded-lg border border-components-glassLine-1 bg-surfaces-cardBgBlue p-[20px] shadow-glassCard backdrop-blur-[50px]',
+        'transition-[transform,box-shadow,border-color] duration-200 ease-out',
+        'hover:-translate-y-1 hover:border-brand-lighten3/60 hover:shadow-hoverLift',
         size === 'desktop' ? 'w-full max-w-[600px]' : 'w-full',
         className,
       )}
@@ -60,7 +62,9 @@ export const IconCard = ({
           isHorizontal ? 'flex-row items-center' : 'flex-col items-center',
         )}
       >
-        <div className="flex size-12 shrink-0 items-center justify-center">{icon}</div>
+        <div className="flex size-12 shrink-0 items-center justify-center transition-transform duration-200 ease-out group-hover:scale-110">
+          {icon}
+        </div>
         <div
           className={clsx(
             'flex w-full flex-col gap-1',

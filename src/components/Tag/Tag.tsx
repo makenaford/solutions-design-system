@@ -39,9 +39,10 @@ export const Tag = React.forwardRef<HTMLSpanElement, TagProps>(function Tag(
       className={clsx(
         'inline-flex items-center justify-center gap-1 overflow-hidden rounded-md whitespace-nowrap',
         'font-sans text-[14px] font-semibold leading-[18px]',
+        'transition-colors duration-150',
         paddingClasses[size],
         isOutline
-          ? 'border border-brand-primary text-neutral-10'
+          ? 'border border-brand-primary text-surfaces-textPrimary'
           : 'bg-components-label-tonalBg text-components-label-tonalText',
         className
       )}

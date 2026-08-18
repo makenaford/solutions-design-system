@@ -19,8 +19,8 @@ function ChevronIcon({ expanded }: { expanded: boolean }) {
       fill="none"
       aria-hidden="true"
       className={clsx(
-        'shrink-0 transition-transform duration-150',
-        expanded ? 'rotate-[45deg] text-brand-primaryActive' : '-rotate-[135deg] text-neutral-8'
+        'shrink-0 transition-transform duration-200 ease-out',
+        expanded ? 'rotate-[45deg] text-brand-primaryActive' : '-rotate-[135deg] text-surfaces-textSecondary'
       )}
     >
       <path
@@ -106,8 +106,8 @@ export function Accordion({
               disabled={item.disabled}
               onClick={() => toggle(item.id)}
               className={clsx(
-                'flex w-full items-center gap-5 rounded-default py-4 text-left transition-colors',
-                'hover:bg-neutral-1/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary',
+                'flex w-full items-center gap-5 rounded-default px-3 py-4 text-left transition-colors duration-150',
+                'hover:bg-surfaces-overlayHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary',
                 item.disabled && 'cursor-not-allowed opacity-50'
               )}
             >
@@ -126,14 +126,14 @@ export function Accordion({
               <ChevronIcon expanded={isOpen} />
             </button>
 
-            <div className={clsx('h-px w-full shrink-0', isOpen ? 'bg-neutral-2/50' : 'bg-neutral-2')} aria-hidden="true" />
+            <div className={clsx('h-px w-full shrink-0 transition-colors duration-150', isOpen ? 'bg-surfaces-dividerOpen' : 'bg-surfaces-divider')} aria-hidden="true" />
 
             {isOpen && (
               <div
                 id={panelId}
                 role="region"
                 aria-labelledby={headerId}
-                className="flex w-full flex-col items-start py-5 text-surfaces-textSecondary"
+                className="flex w-full flex-col items-start px-3 py-5 text-surfaces-textSecondary animate-accordion-in"
                 style={{
                   fontFamily: paragraph.default.fontFamily,
                   fontSize: paragraph.default.fontSize,
