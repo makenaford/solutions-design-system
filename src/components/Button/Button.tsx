@@ -28,5 +28,13 @@ export interface ButtonProps
  * an anchor or a router link), use Mantine's `Button` directly with its `component` prop.
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(props, ref) {
-  return <MantineButton ref={ref} {...props} />
+  return <MantineButton
+    p={5}
+    flex={1}
+    bg={'blue'}
+    
+
+
+  
+  ref={ref} {...props} />
 })

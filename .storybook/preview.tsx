@@ -39,6 +39,8 @@ const preview: Preview = {
     (Story, context) => {
       const colorScheme = context.globals.colorScheme === 'light' ? 'light' : 'dark'
       const frame = (context.parameters.frame ?? {}) as StoryFrameOptions
+      // In Docs each story is one block in a long page, so the frame must not fill the viewport.
+      const fullBleed = context.viewMode !== 'docs'
 
       return (
         // `forceColorScheme` lets the toolbar drive the scheme directly, rather than Mantine
@@ -48,7 +50,7 @@ const preview: Preview = {
           cssVariablesResolver={cssVariablesResolver}
           forceColorScheme={colorScheme}
         >
-          <StoryFrame {...frame}>
+          <StoryFrame {...frame} fullBleed={fullBleed}>
             <Story />
           </StoryFrame>
         </MantineProvider>

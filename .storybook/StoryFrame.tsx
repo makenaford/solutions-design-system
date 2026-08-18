@@ -6,8 +6,19 @@ export interface StoryFrameOptions {
   width?: number | string
   /** Upper bound so a fixed-width story still behaves on a narrow viewport. */
   maxWidth?: number | string
-  /** Centre the story horizontally. On by default when a width is set. */
+  /** Centre the story horizontally. Defaults to on in the canvas when a width is set, and always
+   *  off in Docs, where stories read better aligned to the surrounding prose. */
   centered?: boolean
+}
+
+export interface StoryFrameProps extends StoryFrameOptions {
+  /**
+   * Whether the frame should fill the viewport and paint the page background. True on the canvas,
+   * where the story is the whole page; false in Docs, where each story is one block among many —
+   * filling the viewport there leaves a screen-height gap between every example.
+   */
+  fullBleed?: boolean
+  children: ReactNode
 }
 
 /**
@@ -28,12 +39,19 @@ export interface StoryFrameOptions {
 export function StoryFrame({
   width,
   maxWidth = '100%',
-  centered = width !== undefined,
+  centered,
+  fullBleed = true,
   children,
-}: StoryFrameOptions & { children: ReactNode }) {
+}: StoryFrameProps) {
+  const isCentered = centered ?? (fullBleed && width !== undefined)
+
   return (
-    <Box bg="var(--mantine-color-body)" p="xl" mih="100vh">
-      <Box w={width} maw={maxWidth} mx={centered ? 'auto' : undefined}>
+    <Box
+      bg="var(--mantine-color-body)"
+      p={fullBleed ? 'xl' : 'md'}
+      mih={fullBleed ? '100vh' : undefined}
+    >
+      <Box w={width} maw={maxWidth} mx={isCentered ? 'auto' : undefined}>
         {children}
       </Box>
     </Box>
